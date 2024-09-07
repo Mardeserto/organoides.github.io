@@ -10,7 +10,7 @@
      viewer = new OpenSeadragon.Viewer("container");
      viewer.openDzi("Organoide.xml",'<?xml version="1.0" encoding="utf-8"?><Image TileSize="256" Overlap="1" Format="png" ServerFormat="Default" xmlns="http://schemas.microsoft.com/deepzoom/"> <Size Width="1128" Height="832" /></Image>');
     }
-    Seadragon.Utils.addEvent(window, "load", init);
+    OpenSeadragon.Utils.addEvent(window, "load", init);
   </script>
   <style type="text/css">
     #container {
