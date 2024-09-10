@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulação de Foco - Organoide</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+    }
+
+    #focus-container {
+      margin: 20px auto;
+      width: 640px;
+      height: 480px;
+      position: relative;
+      background-color: black;
+    }
+
+    #focus-image {
+      width: 100%;
+      height: 100%;
+    }
+
+    #slider {
+      width: 100%;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Simulação de Foco</h1>
+  <div id="focus-container">
+    <img id="focus-image" src="images/focus/Ba1 96_1 Dy30 A10 Z0.tif" alt="Imagem de foco">
+  </div>
+
+  <input type="range" id="slider" min="0" max="4" value="0" step="1">
+
+  <script>
+    // Número total de imagens de foco
+    var totalImages = 5;
+
+    // Elementos HTML
+    var slider = document.getElementById('slider');
+    var focusImage = document.getElementById('focus-image');
+
+    // Atualiza a imagem quando o slider for movido
+    slider.addEventListener('input', function() {
+      var focusLevel = slider.value;
+      focusImage.src = 'images/focus/Ba1 96_1 Dy30 A10 Z' + focusLevel + '.tif';
+    });
+  </script>
+
+</body>
+</html>
