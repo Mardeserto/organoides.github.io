@@ -70,7 +70,7 @@
   
   <div id="container">
     <div id="focus-container"></div>
-    <input type="range" id="slider" min="1" max="10" value="1" step="1" orient="vertical">
+    <input type="range" id="slider" min="1" max="5" value="1" step="1" orient="vertical">
   </div>
 
   <script>
@@ -79,7 +79,7 @@
       id: "focus-container",
       prefixUrl: "openseadragon/images/",
       showNavigator: true,
-      tileSources: "images/focus_1/Organoide.dzi",
+      tileSources: "images/focus_1/Focus.xml",
       blendTime: 0.5, // Transição suave
       immediateRender: true
     });
@@ -108,7 +108,7 @@
 
       // Carregar nova imagem de foco com blending suave
       viewer.addTiledImage({
-        tileSource: "images/focus_" + focusLevel + "/Organoide.dzi",
+        tileSource: "images/focus_" + focusLevel + "/Focus.xml",
         opacity: 0,
         success: function(event) {
           var tiledImage = event.item;
