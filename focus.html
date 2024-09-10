@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulação de Foco - Organoide</title>
+  <title>Controle de Foco e Zoom - Organoide</title>
+  
+  <!-- Incluindo o OpenSeadragon -->
+  <script src="openseadragon/openseadragon.min.js"></script>
 
   <style>
     body {
@@ -20,11 +23,6 @@
       background-color: black;
     }
 
-    #focus-image {
-      width: 100%;
-      height: 100%;
-    }
-
     #slider {
       width: 100%;
       margin-top: 20px;
@@ -33,25 +31,29 @@
 </head>
 <body>
 
-  <h1>Simulação de Foco</h1>
-  <div id="focus-container">
-    <img id="focus-image" src="images/focus/Ba1 96_1 Dy30 A10 Z0.tif" alt="Imagem de foco">
-  </div>
+  <h1>Simulação de Foco e Zoom</h1>
+  
+  <div id="focus-container"></div>
 
-  <input type="range" id="slider" min="0" max="4" value="0" step="1">
+  <input type="range" id="slider" min="1" max="5" value="1" step="1">
 
   <script>
-    // Número total de imagens de foco
-    var totalImages = 5;
+    // Inicializando o OpenSeadragon
+    var viewer = OpenSeadragon({
+      id: "focus-container",  // Div onde o visualizador será carregado
+      prefixUrl: "openseadragon/images/",  // Caminho para os ícones do OpenSeadragon
+      showNavigator: true,  // Habilita o mini mapa de navegação
+      tileSources: "images/focus_1/Focus.xml"  // Imagem de foco inicial
+    });
 
-    // Elementos HTML
+    // Slider para controlar o foco (z-stack)
     var slider = document.getElementById('slider');
-    var focusImage = document.getElementById('focus-image');
 
-    // Atualiza a imagem quando o slider for movido
     slider.addEventListener('input', function() {
       var focusLevel = slider.value;
-      focusImage.src = 'images/focus/Ba1 96_1 Dy30 A10 Z' + focusLevel + '.tif';
+
+      // Mudar o nível de foco alterando a tileSource do OpenSeadragon
+      viewer.open("images/focus_" + focusLevel + "/Focus.xml");
     });
   </script>
 
