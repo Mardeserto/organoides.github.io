@@ -35,7 +35,7 @@
   
   <div id="focus-container"></div>
 
-  <input type="range" id="slider" min="1" max="10" value="1" step="1">
+  <input type="range" id="slider" min="1" max="5" value="1" step="1">
 
   <script>
     // Inicializando o OpenSeadragon
@@ -43,7 +43,7 @@
       id: "focus-container",  // Div onde o visualizador será carregado
       prefixUrl: "openseadragon/images/",  // Caminho para os ícones do OpenSeadragon
       showNavigator: true,  // Habilita o mini mapa de navegação
-      tileSources: "images/focus_1/Organoide.dzi"  // Imagem de foco inicial
+      tileSources: "images/focus_1/Focus.xml"  // Imagem de foco inicial
     });
 
     // Slider para controlar o foco (z-stack)
@@ -53,7 +53,7 @@
       var focusLevel = slider.value;
 
       // Mudar o nível de foco alterando a tileSource do OpenSeadragon
-      viewer.open("images/focus_" + focusLevel + "/Organoide.dzi");
+      viewer.open("images/focus_" + focusLevel + "/Focus.xml");
     });
   </script>
 
