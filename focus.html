@@ -15,31 +15,23 @@
       background-color: #f4f4f4;
     }
 
-    #container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 600px;
-      margin: 20px auto;
-    }
-
     #focus-container {
+      margin: 20px auto;
       width: 640px;
-      height: 100%;
-      background-color: black;
+      height: 480px;
       position: relative;
+      background-color: black;
     }
 
     #slider {
       width: 10px;
-      height: 400px;
+      height: 100%;
       background: #ddd;
       border-radius: 5px;
-      position: absolute;
-      right: -10px; /* Posicionando o slider ao lado direito */
-      top: 0;
-      bottom: 0;
-      margin: auto;
+      position: relative;
+      margin-left: 20px;
+      transform: rotate(270deg); /* Rotaciona o slider para vertical */
+      transform-origin: top left; /* Ajusta o ponto de rotação */
     }
   </style>
 </head>
@@ -47,10 +39,9 @@
 
   <h1>Simulação de Foco e Zoom</h1>
   
-  <div id="container">
-    <div id="focus-container"></div>
-    <input type="range" id="slider" min="1" max="5" value="1" step="1" orient="vertical">
-  </div>
+  <div id="focus-container"></div>
+
+  <input type="range" id="slider" min="1" max="5" value="1" step="1">
 
   <script>
     // Inicializando o OpenSeadragon
@@ -59,7 +50,7 @@
       prefixUrl: "openseadragon/images/",
       showNavigator: true,
       tileSources: "images/focus_1/Focus.xml",
-      blendTime: 0.5, // Transição suave
+      blendTime: 0.5, // Controle de transição suave (0.5 segundos)
       immediateRender: true
     });
 
@@ -78,25 +69,25 @@
       viewer.viewport.zoomTo(state.zoom, state.center);
     }
 
-    // Slider de foco (vertical)
+    // Monitorando o slider para mudança de foco
     slider.addEventListener('input', function() {
       var focusLevel = slider.value;
 
-      // Salvando o estado atual de zoom
+      // Salvando o estado atual de zoom e centro
       var zoomState = saveZoomState();
 
-      // Carregar nova imagem de foco com blending suave
+      // Carregando a nova imagem de foco com blending suave
       viewer.addTiledImage({
         tileSource: "images/focus_" + focusLevel + "/Focus.xml",
-        opacity: 0,
+        opacity: 0, // Inicialmente invisível
         success: function(event) {
           var tiledImage = event.item;
-          tiledImage.setOpacity(1); // Efeito de fade
+          tiledImage.setOpacity(1); // Tornar visível com efeito de fade
           
           // Restaurando o estado de zoom
           restoreZoomState(zoomState);
 
-          // Remover imagem anterior
+          // Remover a imagem anterior para evitar sobreposições
           if (viewer.world.getItemCount() > 1) {
             var previousImage = viewer.world.getItemAt(0);
             viewer.world.removeItem(previousImage);
