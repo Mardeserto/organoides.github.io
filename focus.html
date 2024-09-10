@@ -15,17 +15,51 @@
       background-color: #f4f4f4;
     }
 
-    #focus-container {
+    #container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 600px;
       margin: 20px auto;
+    }
+
+    #focus-container {
       width: 640px;
-      height: 480px;
-      position: relative;
+      height: 100%;
       background-color: black;
+      position: relative;
     }
 
     #slider {
-      width: 100%;
-      margin-top: 20px;
+      -webkit-appearance: none;
+      width: 10px;
+      height: 100%;
+      background: #ddd;
+      border-radius: 5px;
+      position: relative;
+      margin-left: 20px;
+      transform: rotate(270deg); /* Rotaciona o slider para vertical */
+      transform-origin: top left; /* Ajusta o ponto de rotação */
+    }
+
+    /* Estilo do polegar (botão deslizante) */
+    #slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background-color: #4CAF50;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+    }
+
+    #slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background-color: #4CAF50;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
     }
   </style>
 </head>
@@ -33,9 +67,10 @@
 
   <h1>Simulação de Foco e Zoom</h1>
   
-  <div id="focus-container"></div>
-
-  <input type="range" id="slider" min="1" max="5" value="1" step="1">
+  <div id="container">
+    <div id="focus-container"></div>
+    <input type="range" id="slider" min="1" max="5" value="1" step="1">
+  </div>
 
   <script>
     // Inicializando o OpenSeadragon
@@ -44,7 +79,7 @@
       prefixUrl: "openseadragon/images/",
       showNavigator: true,
       tileSources: "images/focus_1/Focus.xml",
-      blendTime: 1, // Controle de transição suave (1 segundo)
+      blendTime: 0.5, // Transição suave
       immediateRender: true
     });
 
@@ -63,25 +98,25 @@
       viewer.viewport.zoomTo(state.zoom, state.center);
     }
 
-    // Monitorando o slider para mudança de foco
+    // Slider de foco (vertical)
     slider.addEventListener('input', function() {
       var focusLevel = slider.value;
 
-      // Salvando o estado atual de zoom e centro
+      // Salvando o estado atual de zoom
       var zoomState = saveZoomState();
 
-      // Carregando a nova imagem de foco com blending suave
+      // Carregar nova imagem de foco com blending suave
       viewer.addTiledImage({
         tileSource: "images/focus_" + focusLevel + "/Focus.xml",
-        opacity: 0, // Inicialmente invisível
+        opacity: 0,
         success: function(event) {
           var tiledImage = event.item;
-          tiledImage.setOpacity(1); // Tornar visível com efeito de fade
+          tiledImage.setOpacity(1); // Efeito de fade
           
           // Restaurando o estado de zoom
           restoreZoomState(zoomState);
 
-          // Remover a imagem anterior para evitar sobreposições
+          // Remover imagem anterior
           if (viewer.world.getItemCount() > 1) {
             var previousImage = viewer.world.getItemAt(0);
             viewer.world.removeItem(previousImage);
