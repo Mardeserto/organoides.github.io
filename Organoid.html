@@ -99,7 +99,7 @@
       const viewer = OpenSeadragon({
         id: `${organoide.name}-viewer`,
         prefixUrl: "openseadragon/images/",
-        tileSources: `images/${organoide.name}/focus_1/focus_1.xml`,
+        tileSources: `images/${organoide.name}/focus_1.xml`,
         blendTime: 0.5,
         showNavigator: true,
         immediateRender: true,
@@ -114,7 +114,7 @@
 
         // Carregar a nova imagem de foco
         viewer.addTiledImage({
-          tileSource: `images/${organoide.name}/focus_${focusLevel}/focus_${focusLevel}.xml`,
+          tileSource: `images/${organoide.name}/focus_${focusLevel}.xml`,
           opacity: 0, // Inicialmente invisível
           success: function(event) {
             const tiledImage = event.item;
