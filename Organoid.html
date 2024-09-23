@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulação de Foco e Zoom - Organoides</title>
+  
+  <!-- Incluindo o OpenSeadragon -->
+  <script src="openseadragon/openseadragon.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+    }
+
+    .organ-zoom-container {
+      margin: 20px auto;
+      width: 640px;
+      height: 480px;
+      position: relative;
+      background-color: black;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .slider {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .organ-container {
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Simulação de Foco e Zoom - Organoides</h1>
+
+  <!-- Container onde o JS vai gerar os viewers -->
+  <div id="organoides-container"></div>
+
+  <script>
+    // Lista de organoides e número de focos
+    const organoides = [
+      { name: 'Organoid_1', maxFocus: 5 },
+      { name: 'Organoid_2', maxFocus: 5 },
+      { name: 'Organoid_3', maxFocus: 5 },
+      // Adicione mais organoides aqui
+    ];
+
+    const container = document.getElementById('organoides-container');
+
+    // Função para salvar o estado de zoom
+    function saveZoomState(viewer) {
+      return {
+        zoom: viewer.viewport.getZoom(),
+        center: viewer.viewport.getCenter()
+      };
+    }
+
+    // Função para restaurar o estado de zoom
+    function restoreZoomState(viewer, state) {
+      viewer.viewport.zoomTo(state.zoom, state.center);
+    }
+
+    // Função que gera os viewers e sliders dinamicamente
+    organoides.forEach(organoide => {
+      // Criar o container do organoide
+      const organContainer = document.createElement('div');
+      organContainer.className = 'organ-container';
+
+      // Título do organoide
+      const title = document.createElement('h2');
+      title.textContent = organoide.name;
+      organContainer.appendChild(title);
+
+      // Container do OpenSeadragon
+      const zoomContainer = document.createElement('div');
+      zoomContainer.id = `${organoide.name}-viewer`;
+      zoomContainer.className = 'organ-zoom-container';
+      organContainer.appendChild(zoomContainer);
+
+      // Slider para o foco
+      const slider = document.createElement('input');
+      slider.type = 'range';
+      slider.min = 1;
+      slider.max = organoide.maxFocus;
+      slider.value = 1;
+      slider.className = 'slider';
+      slider.id = `${organoide.name}-slider`;
+      organContainer.appendChild(slider);
+
+      container.appendChild(organContainer);
+
+      // Inicializar OpenSeadragon para o organoide
+      const viewer = OpenSeadragon({
+        id: `${organoide.name}-viewer`,
+        prefixUrl: "openseadragon/images/",
+        tileSources: `images/${organoide.name}/focus_1/focus_1.xml`,
+        blendTime: 0.5,
+        showNavigator: true,
+        immediateRender: true,
+      });
+
+      // Monitorar o slider para ajuste de foco
+      slider.addEventListener('input', function() {
+        const focusLevel = slider.value;
+
+        // Salvar o estado de zoom e centro
+        const zoomState = saveZoomState(viewer);
+
+        // Carregar a nova imagem de foco
+        viewer.addTiledImage({
+          tileSource: `images/${organoide.name}/focus_${focusLevel}/focus_${focusLevel}.xml`,
+          opacity: 0, // Inicialmente invisível
+          success: function(event) {
+            const tiledImage = event.item;
+            tiledImage.setOpacity(1); // Tornar visível
+
+            // Restaurar o estado de zoom
+            restoreZoomState(viewer, zoomState);
+
+            // Remover a imagem anterior
+            if (viewer.world.getItemCount() > 1) {
+              const previousImage = viewer.world.getItemAt(0);
+              viewer.world.removeItem(previousImage);
+            }
+          }
+        });
+      });
+    });
+  </script>
+<script>
+  window.onload = function() {
+    const hash = window.location.hash;
+    if (hash) {
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+</script>
+</body>
+</html>
