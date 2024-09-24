@@ -37,35 +37,16 @@
       top: -25px;
       margin: auto;
     }
-    /* Estilo do botão deslizante */
-    .slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      background-color: #4CAF50;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-    }
-    .slider::-moz-range-thumb {
-      width: 20px;
-      height: 20px;
-      background-color: #4CAF50;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-    }
-    .slider::-ms-thumb {
-      width: 20px;
-      height: 20px;
-      background-color: #4CAF50;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-    }
-
     .slider::-webkit-slider-runnable-track {
-        background: #ddd;
+      background: #ddd;
+    }
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px; /* 1 */
+        height: 40px;
+        background: #fff;
+        box-shadow: -200px 0 0 200px dodgerblue; /* 2 */
+        border: 2px solid #999; /* 1 */
     }
 
     .slider::-moz-range-track {
@@ -73,8 +54,26 @@
         background: #ddd;
     }
 
+    .slider::-moz-range-thumb {
+        background: #fff;
+        height: 40px;
+        width: 20px; /* 1 */
+        border: 3px solid #999; /* 1 */
+        border-radius: 0 !important;
+        box-shadow: -200px 0 0 200px dodgerblue;
+        box-sizing: border-box;
+    }
+
     .slider::-ms-fill-lower { 
         background: dodgerblue;
+    }
+
+    .slider::-ms-thumb { 
+        background: #fff;
+        border: 2px solid #999; /* 1 */
+        height: 40px;
+        width: 20px; /* 1 */
+        box-sizing: border-box;
     }
 
     .slider::-ms-ticks-after { 
