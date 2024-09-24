@@ -43,7 +43,7 @@
       id: "focus-container",
       prefixUrl: "openseadragon/images/",
       showNavigator: true,
-      tileSources: "images/Organoid_1/focus_1.xml",
+      tileSources: "images/focus_1/Focus_test.xml",
       blendTime: 0.5, // Controle de transição suave (0.5 segundos)
       immediateRender: true
     });
@@ -72,7 +72,7 @@
 
       // Carregando a nova imagem de foco com blending suave
       viewer.addTiledImage({
-        tileSource: "images/Organoid_1/focus_" + focusLevel + ".xml",
+        tileSource: "images/focus_" + focusLevel + "/Focus_test.xml",
         opacity: 0, // Inicialmente invisível
         success: function(event) {
           var tiledImage = event.item;
