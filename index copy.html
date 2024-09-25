@@ -54,6 +54,7 @@
       width: 470px;
       height: 10px;
       position: relative;
+      overflow: hidden;
       transform: rotate(270deg);
       transform-origin: top left;
       right: -580px;
@@ -70,6 +71,8 @@
         width: 20px;
         height: 40px;
         background: #b10606;
+        box-shadow: -500px 0 0 500px #5579f1c9;
+        border: 2px solid #5a5a5a;
     }
 
     #slider::-moz-range-track {
@@ -81,12 +84,19 @@
         background: #b10606;
         height: 40px;
         width: 20px;
+        border: 3px solid #5a5a5a;
         border-radius: 0 !important;
+        box-shadow: -500px 0 0 500px #5579f1c9;
         box-sizing: border-box;
+    }
+
+    #slider::-ms-fill-lower { 
+        background: #5579f1c9;
     }
 
     #slider::-ms-thumb { 
         background: #b10606;
+        border: 2px solid #5a5a5a;
         height: 40px;
         width: 20px;
         box-sizing: border-box;
