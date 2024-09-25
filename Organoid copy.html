@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulação de Foco e Zoom - Organoides</title>
+  <title>Organoids for survey</title>
   
   <!-- Incluindo o OpenSeadragon -->
   <script src="openseadragon/openseadragon.min.js"></script>
@@ -25,6 +25,22 @@
       vertical-align: top;
     }
 
+    .slider-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .slider-label {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      position: absolute;
+      transform: rotate(90deg);
+      right: -230px;
+      top: -245px;
+    }
+
     .slider {
       -webkit-appearance: none;
       width: 480px;
@@ -37,15 +53,17 @@
       top: -25px;
       margin: auto;
     }
+
     .slider::-webkit-slider-runnable-track {
       background: #b9cff7;
     }
+
     .slider::-webkit-slider-thumb {
         -webkit-appearance: none;
-        width: 20px; /* 1 */
+        width: 20px;
         height: 40px;
         background: #b10606;
-        box-shadow: -500px 0 0 500px #5579f1c9; /* 2 */
+        box-shadow: -500px 0 0 500px #5579f1c9;
         border: 2px solid #5a5a5a;
     }
 
@@ -57,8 +75,8 @@
     .slider::-moz-range-thumb {
         background: #b10606;
         height: 40px;
-        width: 20px; /* 1 */
-        border: 3px solid #5a5a5a; /* 1 */
+        width: 20px;
+        border: 3px solid #5a5a5a;
         border-radius: 0 !important;
         box-shadow: -500px 0 0 500px #5579f1c9;
         box-sizing: border-box;
@@ -70,9 +88,9 @@
 
     .slider::-ms-thumb { 
         background: #b10606;
-        border: 2px solid #5a5a5a; /* 1 */
+        border: 2px solid #5a5a5a;
         height: 40px;
-        width: 20px; /* 1 */
+        width: 20px;
         box-sizing: border-box;
     }
 
@@ -94,6 +112,7 @@
     .slider::-ms-tooltip { 
         display: none;
     }
+
     .organ-container {
       margin-bottom: 40px;
     }
@@ -101,7 +120,7 @@
 </head>
 <body>
 
-  <h1>Simulação de Foco e Zoom - Organoides</h1>
+  <h1>Organoids for survey</h1>
 
   <!-- Container onde o JS vai gerar os viewers -->
   <div id="organoides-container"></div>
@@ -147,6 +166,16 @@
       zoomContainer.className = 'organ-zoom-container';
       organContainer.appendChild(zoomContainer);
 
+      // Container para o slider e rótulo
+      const sliderContainer = document.createElement('div');
+      sliderContainer.className = 'slider-container';
+
+      // Label para o slider
+      const sliderLabel = document.createElement('div');
+      sliderLabel.className = 'slider-label';
+      sliderLabel.textContent = 'Focus Adjustment';
+      sliderContainer.appendChild(sliderLabel);
+
       // Slider para o foco
       const slider = document.createElement('input');
       slider.type = 'range';
@@ -155,8 +184,9 @@
       slider.value = 1;
       slider.className = 'slider';
       slider.id = `${organoide.name}-slider`;
-      organContainer.appendChild(slider);
+      sliderContainer.appendChild(slider);
 
+      organContainer.appendChild(sliderContainer);
       container.appendChild(organContainer);
 
       // Inicializar OpenSeadragon para o organoide
