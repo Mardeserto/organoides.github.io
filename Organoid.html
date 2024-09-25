@@ -126,7 +126,12 @@
   <div id="organoides-container"></div>
 
   <script>
-    // Gerar dinamicamente a lista de organoides de 1 até n(length)
+    
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const organoideNumber = params.get('organoid') || 1; // Pega o organoide da URL ou usa 1 por padrão
+    
+      // Gerar dinamicamente a lista de organoides de 1 até n(length)
     const organoides = Array.from({ length: 16 }, (_, i) => ({
       name: `Organoid_${i + 1}`,
       maxFocus: 5
@@ -219,22 +224,6 @@
         });
       });
     });
-  </script>
-  <script>
-    window.onload = function() {
-      const params = new URLSearchParams(window.location.search);
-      const organoideNumber = params.get('organoid') || 1; // Pega o organoide da URL ou usa 1 por padrão
-  
-      // Defina a imagem ou o OpenSeadragon para carregar o organoide correto
-      const viewer = OpenSeadragon({
-        id: "viewer",
-        prefixUrl: "openseadragon/images/",
-        tileSources: `images/Organoid_${organoideNumber}/focus_1.xml`,
-        blendTime: 0.5,
-        showNavigator: true,
-        immediateRender: true,
-      });
-    };
-  </script>  
+  </script> 
 </body>
 </html>
