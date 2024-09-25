@@ -125,13 +125,14 @@
     window.onload = function() {
       const params = new URLSearchParams(window.location.search);
       const organoideNumber = params.get('organoid') || 1; // Pega o organoide da URL ou usa 1 por padrão
+      var orgNumber = organoideNumber;
 
     // Inicializando o OpenSeadragon
     var viewer = OpenSeadragon({
       id: "focus-container",
       prefixUrl: "openseadragon/images/",
       showNavigator: true,
-      tileSources: "images/Organoid_${organoideNumber}/focus_1.xml",
+      tileSources: "images/Organoid_" + orgNumber + "/focus_1.xml",
       blendTime: 0.5, // Controle de transição suave (0.5 segundos)
       immediateRender: true
     });
@@ -160,7 +161,7 @@
 
       // Carregando a nova imagem de foco com blending suave
       viewer.addTiledImage({
-        tileSource: "images/Organoid_${organoideNumber}/focus_" + focusLevel + ".xml",
+        tileSource: "images/Organoid_" + orgNumber + "/focus_" + focusLevel + ".xml",
         opacity: 0, // Inicialmente invisível
         success: function(event) {
           var tiledImage = event.item;
