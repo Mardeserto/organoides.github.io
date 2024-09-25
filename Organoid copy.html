@@ -220,5 +220,16 @@
       });
     });
   </script>
+<script>
+  window.onload = function() {
+    const hash = window.location.hash;
+    if (hash) {
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+</script>
 </body>
 </html>
