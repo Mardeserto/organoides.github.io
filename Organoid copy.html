@@ -25,21 +25,6 @@
       vertical-align: top;
     }
 
-    .slider-container {
-      position: relative;
-      display: inline-block;
-    }
-
-    .slider-label {
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
-      position: absolute;
-      right: -700px;
-      top: 10px;
-      transform: rotate(90deg); /* Mantém o texto vertical */
-    }
-
     .slider {
       -webkit-appearance: none;
       width: 480px;
@@ -52,17 +37,15 @@
       top: -25px;
       margin: auto;
     }
-
     .slider::-webkit-slider-runnable-track {
       background: #b9cff7;
     }
-
     .slider::-webkit-slider-thumb {
         -webkit-appearance: none;
-        width: 20px;
+        width: 20px; /* 1 */
         height: 40px;
         background: #b10606;
-        box-shadow: -500px 0 0 500px #5579f1c9;
+        box-shadow: -500px 0 0 500px #5579f1c9; /* 2 */
         border: 2px solid #5a5a5a;
     }
 
@@ -74,8 +57,8 @@
     .slider::-moz-range-thumb {
         background: #b10606;
         height: 40px;
-        width: 20px;
-        border: 3px solid #5a5a5a;
+        width: 20px; /* 1 */
+        border: 3px solid #5a5a5a; /* 1 */
         border-radius: 0 !important;
         box-shadow: -500px 0 0 500px #5579f1c9;
         box-sizing: border-box;
@@ -87,9 +70,9 @@
 
     .slider::-ms-thumb { 
         background: #b10606;
-        border: 2px solid #5a5a5a;
+        border: 2px solid #5a5a5a; /* 1 */
         height: 40px;
-        width: 20px;
+        width: 20px; /* 1 */
         box-sizing: border-box;
     }
 
@@ -111,7 +94,6 @@
     .slider::-ms-tooltip { 
         display: none;
     }
-
     .organ-container {
       margin-bottom: 40px;
     }
@@ -165,16 +147,6 @@
       zoomContainer.className = 'organ-zoom-container';
       organContainer.appendChild(zoomContainer);
 
-      // Container para o slider e rótulo
-      const sliderContainer = document.createElement('div');
-      sliderContainer.className = 'slider-container';
-
-      // Label para o slider
-      const sliderLabel = document.createElement('span');
-      sliderLabel.className = 'slider-label';
-      sliderLabel.textContent = 'Focus Adjustment';
-      sliderContainer.appendChild(sliderLabel);
-
       // Slider para o foco
       const slider = document.createElement('input');
       slider.type = 'range';
@@ -183,9 +155,8 @@
       slider.value = 1;
       slider.className = 'slider';
       slider.id = `${organoide.name}-slider`;
-      sliderContainer.appendChild(slider);
+      organContainer.appendChild(slider);
 
-      organContainer.appendChild(sliderContainer);
       container.appendChild(organContainer);
 
       // Inicializar OpenSeadragon para o organoide
