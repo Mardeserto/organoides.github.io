@@ -126,11 +126,15 @@
   <div id="organoides-container"></div>
 
   <script>
-    // Gerar dinamicamente a lista de organoides de 1 até n(length)
-    const organoides = Array.from({ length: 16 }, (_, i) => ({
-      name: `Organoid_${i + 1}`,
-      maxFocus: 5
-    }));
+
+    // Função que gera dinamicamente a lista de organoides
+    const organoides = [];
+    const numOrganoides = 16; // Defina o número de organoides desejado
+
+    for (let i = 1; i <= numOrganoides; i++) {
+      organoides.push({ name: `Organoid_${i}`, maxFocus: 5 });
+    }
+
 
     const container = document.getElementById('organoides-container');
 

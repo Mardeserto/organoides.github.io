@@ -126,13 +126,11 @@
   <div id="organoides-container"></div>
 
   <script>
-    // Lista de organoides e número de focos
-    const organoides = [
-      { name: 'Organoid_1', maxFocus: 5 },
-      { name: 'Organoid_2', maxFocus: 5 },
-      { name: 'Organoid_3', maxFocus: 5 },
-      // Adicione mais organoides aqui
-    ];
+    // Gerar dinamicamente a lista de organoides de 1 até n(length)
+    const organoides = Array.from({ length: 16 }, (_, i) => ({
+      name: `Organoid_${i + 1}`,
+      maxFocus: 5
+    }));
 
     const container = document.getElementById('organoides-container');
 
