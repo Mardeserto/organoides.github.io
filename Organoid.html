@@ -35,6 +35,8 @@
       font-weight: bold;
       color: #333;
       position: relative;
+      transform: rotate(270deg);
+      transform-origin: top left;
       right: -700px;
       top: -25px;
     }
@@ -169,7 +171,7 @@
       sliderContainer.className = 'slider-container';
 
       // Label para o slider
-      const sliderLabel = document.createElement('span');
+      const sliderLabel = document.createElement('div');
       sliderLabel.className = 'slider-label';
       sliderLabel.textContent = 'Focus Adjustment';
       sliderContainer.appendChild(sliderLabel);
