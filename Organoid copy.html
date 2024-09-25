@@ -155,11 +155,6 @@
       const organContainer = document.createElement('div');
       organContainer.className = 'organ-container';
 
-      // Título do organoide
-      const title = document.createElement('h2');
-      title.textContent = organoide.name;
-      organContainer.appendChild(title);
-
       // Container do OpenSeadragon
       const zoomContainer = document.createElement('div');
       zoomContainer.id = `${organoide.name}-viewer`;
