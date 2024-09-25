@@ -51,15 +51,6 @@
 
     #slider {
       -webkit-appearance: none;
-      background: linear-gradient(to right, 
-        #333 0%, #333 20%, 
-        transparent 20%, transparent 40%, 
-        #333 40%, #333 60%, 
-        transparent 60%, transparent 80%, 
-        #333 80%, #333 100%);
-      background-size: 100% 5px;
-      background-repeat: no-repeat;
-      background-position: bottom;
       width: 470px;
       height: 10px;
       position: relative;
@@ -88,12 +79,6 @@
     #slider::-moz-range-track {
         height: 10px;
         background: #b9cff7;
-        background: linear-gradient(to right, 
-          #333 0%, #333 20%, 
-          transparent 20%, transparent 40%, 
-          #333 40%, #333 60%, 
-          transparent 60%, transparent 80%, 
-          #333 80%, #333 100%);
     }
 
     #slider::-moz-range-thumb {
@@ -113,14 +98,6 @@
         position: relative;
         top: -5px;
     }
-    #slider::-ms-fill-lower {
-    background: linear-gradient(to right, 
-      #333 0%, #333 20%, 
-      transparent 20%, transparent 40%, 
-      #333 40%, #333 60%, 
-      transparent 60%, transparent 80%, 
-      #333 80%, #333 100%);
-  }
 
     #slider::-ms-ticks-after { 
         display: none; 
@@ -132,8 +109,6 @@
 
     #slider::-ms-track { 
         background: #b9cff7;
-        background: transparent; /* O fundo é transparente em Edge/IE */
-        border-color: transparent;
         color: transparent;
         height: 10px;
         border: none;
@@ -156,7 +131,7 @@
   <script>
     window.onload = function() {
       const params = new URLSearchParams(window.location.search);
-      const organoideNumber = params.get('organoid') || 1; // Pega o organoide da URL ou usa 1 por padrão
+      const organoideNumber = params.get('organoid') || 0; // Pega o organoide da URL ou usa 0 por padrão
 
     // Inicializando o OpenSeadragon
     var viewer = OpenSeadragon({
