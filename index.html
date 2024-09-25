@@ -21,17 +21,6 @@
       position: relative;
       background-color: black;
     }
-
-    #slider-container {
-      position: relative;
-      display: inline-block;
-      background-color: #e0e0e0; /* Cor de fundo */
-      padding: 20px; /* Espaçamento interno */
-      border: 2px solid #333; /* Borda ao redor */
-      border-radius: 10px; /* Arredondar os cantos */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    }
-
     #slider-label {
       font-family: Helvetica, sans-serif;
       font-size: 18px;
@@ -45,6 +34,12 @@
 
     #slider {
       -webkit-appearance: none;
+      display: inline-block;
+      background-color: #e0e0e0; /* Cor de fundo */
+      padding: 20px; /* Espaçamento interno */
+      border: 2px solid #333; /* Borda ao redor */
+      border-radius: 10px; /* Arredondar os cantos */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
       width: 480px;
       height: 10px;
       position: relative;
@@ -120,7 +115,7 @@
 <body>
   
   <div id="focus-container"></div>
-  <div id="slider-container"></div>
+  <div id="slider"></div>
     <div id="slider-label">Focus Adjustment</div>
     <input type="range" id="slider" min="1" max="5" value="1" step="1">
   </div>

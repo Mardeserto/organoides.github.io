@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulação de Foco e Zoom - Organoide</title>
+  <title>Organoid</title>
   
   <!-- Incluindo o OpenSeadragon -->
   <script src="openseadragon/openseadragon.min.js"></script>
@@ -14,7 +14,6 @@
       text-align: center;
       background-color: #f4f4f4;
     }
-
     #focus-container {
       margin: 20px auto;
       width: 640px;
@@ -26,17 +25,22 @@
     #slider-container {
       position: relative;
       display: inline-block;
+      background-color: #e0e0e0; /* Cor de fundo */
+      padding: 20px; /* Espaçamento interno */
+      border: 2px solid #333; /* Borda ao redor */
+      border-radius: 10px; /* Arredondar os cantos */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
     }
 
     #slider-label {
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Helvetica, sans-serif;
       font-size: 18px;
       font-weight: bold;
       color: #333;
-      position: absolute;
+      position: relative;
       transform: rotate(90deg);
-      right: -230px;
-      top: -245px;
+      right: -370px;
+      top: -273px;
     }
 
     #slider {
@@ -47,8 +51,8 @@
       overflow: hidden;
       transform: rotate(270deg);
       transform-origin: top left;
-      right: -600px;
-      top: -25px;
+      right: -580px;
+      top: -63px;
       margin: auto;
     }
 
@@ -114,21 +118,25 @@
   </style>
 </head>
 <body>
-
-  <h1>Simulação de Foco e Zoom</h1>
   
   <div id="focus-container"></div>
-
-  <input type="range" id="slider" min="1" max="5" value="1" step="1">
+  <div id="slider-container"></div>
+    <div id="slider-label">Focus Adjustment</div>
+    <input type="range" id="slider" min="1" max="5" value="1" step="1">
+  </div>
 
   <script>
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const organoideNumber = params.get('organoid') || 1; // Pega o organoide da URL ou usa 1 por padrão
+
     // Inicializando o OpenSeadragon
     var viewer = OpenSeadragon({
       id: "focus-container",
       prefixUrl: "openseadragon/images/",
       showNavigator: true,
-      tileSources: "images/Organoid_1/focus_1.xml",
-      blendTime: 0.5, // Controle de transição suave (0.5 segundos)
+      tileSources: "images/Organoid_" + organoideNumber + "/focus_1.xml",
+      blendTime: 0.1, // Controle de transição suave (0.1 segundos)
       immediateRender: true
     });
 
@@ -156,7 +164,7 @@
 
       // Carregando a nova imagem de foco com blending suave
       viewer.addTiledImage({
-        tileSource: "images/Organoid_1/focus_" + focusLevel + ".xml",
+        tileSource: "images/Organoid_" + organoideNumber + "/focus_" + focusLevel + ".xml",
         opacity: 0, // Inicialmente invisível
         success: function(event) {
           var tiledImage = event.item;
@@ -173,6 +181,7 @@
         }
       });
     });
+    };
   </script>
 
 </body>
