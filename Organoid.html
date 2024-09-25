@@ -187,40 +187,70 @@
       container.appendChild(organContainer);
 
       // Inicializar OpenSeadragon para o organoide
-      const viewer = OpenSeadragon({
-        id: `${organoide.name}-viewer`,
-        prefixUrl: "openseadragon/images/",
-        tileSources: `images/${organoide.name}/focus_1.xml`,
-        blendTime: 0.5,
-        showNavigator: true,
-        immediateRender: true,
-      });
+      function createViewer(organoide) {
+        const viewer = OpenSeadragon({
+          id: `${organoide.name}-viewer`,
+          prefixUrl: "openseadragon/images/",
+          tileSources: `images/${organoide.name}/focus_1.xml`,
+          blendTime: 0.5,
+          showNavigator: true,
+          immediateRender: true,
+        });
+        return viewer;
+      }
 
-      // Monitorar o slider para ajuste de foco
-      slider.addEventListener('input', function() {
-        const focusLevel = slider.value;
-
-        // Salvar o estado de zoom e centro
-        const zoomState = saveZoomState(viewer);
-
-        // Carregar a nova imagem de foco
-        viewer.addTiledImage({
-          tileSource: `images/${organoide.name}/focus_${focusLevel}.xml`,
-          opacity: 0, // Inicialmente invisível
-          success: function(event) {
-            const tiledImage = event.item;
-            tiledImage.setOpacity(1); // Tornar visível
-
-            // Restaurar o estado de zoom
-            restoreZoomState(viewer, zoomState);
-
-            // Remover a imagem anterior
-            if (viewer.world.getItemCount() > 1) {
-              const previousImage = viewer.world.getItemAt(0);
-              viewer.world.removeItem(previousImage);
+      // Carrega o viewer quando o elemento entra em vista
+      function handleIntersection(entries, observer) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const organoide = entry.target;
+            const organoideName = organoide.getAttribute('data-organoid');
+            // Inicialize o viewer
+            if (!organoide.viewer) {
+              organoide.viewer = createViewer({ name: organoideName, maxFocus: 5 });
             }
           }
         });
+      }
+
+      const observer = new IntersectionObserver(handleIntersection, {
+        root: null, // Usa o viewport da página
+        threshold: 0.1 // Ajusta o limite de visibilidade
+      });
+
+      organoides.forEach(organoide => {
+        const organContainer = document.createElement('div');
+        organContainer.className = 'organ-container';
+        organContainer.setAttribute('data-organoid', organoide.name);
+        observer.observe(organContainer);
+
+        // Monitorar o slider para ajuste de foco
+        slider.addEventListener('input', function() {
+          const focusLevel = slider.value;
+
+          // Salvar o estado de zoom e centro
+          const zoomState = saveZoomState(viewer);
+
+          // Carregar a nova imagem de foco
+          viewer.addTiledImage({
+            tileSource: `images/${organoide.name}/focus_${focusLevel}.xml`,
+            opacity: 0, // Inicialmente invisível
+            success: function(event) {
+              const tiledImage = event.item;
+              tiledImage.setOpacity(1); // Tornar visível
+
+              // Restaurar o estado de zoom
+              restoreZoomState(viewer, zoomState);
+
+              // Remover a imagem anterior
+              if (viewer.world.getItemCount() > 1) {
+                const previousImage = viewer.world.getItemAt(0);
+                viewer.world.removeItem(previousImage);
+              }
+          }
+        });
+      });
+        container.appendChild(organContainer);
       });
     });
   </script>
