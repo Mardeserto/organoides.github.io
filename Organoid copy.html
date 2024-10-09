@@ -126,12 +126,7 @@
   <div id="organoides-container"></div>
 
   <script>
-    
-    window.onload = function() {
-      const params = new URLSearchParams(window.location.search);
-      const organoideNumber = params.get('organoid') || 1; // Pega o organoide da URL ou usa 1 por padrão
-    
-      // Gerar dinamicamente a lista de organoides de 1 até n(length)
+    // Gerar dinamicamente a lista de organoides de 1 até n(length)
     const organoides = Array.from({ length: 16 }, (_, i) => ({
       name: `Organoid_${i + 1}`,
       maxFocus: 5
@@ -224,6 +219,17 @@
         });
       });
     });
-  </script> 
+  </script>
+<script>
+  window.onload = function() {
+    const hash = window.location.hash;
+    if (hash) {
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+</script>
 </body>
 </html>

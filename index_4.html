@@ -55,6 +55,7 @@
       width: 470px;
       height: 10px;
       position: relative;
+      overflow: hidden;
       transform: rotate(270deg);
       transform-origin: top left;
       right: -580px;
@@ -63,7 +64,9 @@
     }
 
     #slider::-webkit-slider-runnable-track {
+      background: #b9cff7;
       height: 10px;
+      border-radius: 5px;
     }
 
     #slider::-webkit-slider-thumb {
@@ -78,6 +81,8 @@
 
     #slider::-moz-range-track {
         height: 10px;
+        background: #b9cff7;
+        border-radius: 5px;
     }
 
     #slider::-moz-range-thumb {
@@ -107,9 +112,11 @@
     }
 
     #slider::-ms-track { 
+        background: #b9cff7;
         color: transparent;
         height: 10px;
         border: none;
+        border-radius: 5px;
     }
 
     #slider::-ms-tooltip { 
