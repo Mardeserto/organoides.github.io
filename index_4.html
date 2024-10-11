@@ -9,13 +9,21 @@
   <script src="openseadragon/openseadragon.min.js"></script>
 
   <style>
+    html {
+      width: 700px;
+      height: 520px;
+    }
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      width: 700px;
+      height: 520px;
     }
     #focus-container {
-      margin: 20px auto;
+      margin: 0 0;
       width: 640px;
       height: 480px;
       position: relative;
@@ -131,7 +139,6 @@
   <div id="slider-container"></div>
     <div id="slider-label">Focus Adjustment</div>
     <input type="range" id="slider" min="1" max="5" value="1" step="1">
-  </div>
 
   <script>
     window.onload = function() {
