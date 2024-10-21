@@ -187,10 +187,9 @@
       // Carrega a nova imagem de foco
       viewer.addTiledImage({
         tileSource: "images/Organoid_" + organoideNumber + "/focus_" + focusLevel + ".xml",
-        opacity: 0, // Inicialmente invisível
+        opacity: 1, // Inicialmente invisível
         success: function(event) {
           var tiledImage = event.item;
-          tiledImage.setOpacity(1); // Tornar visível com efeito de fade
           
           // Restaura o estado de zoom
           restoreZoomState(zoomState);
