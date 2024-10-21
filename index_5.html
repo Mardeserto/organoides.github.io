@@ -5,37 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Organoid</title>
   
-  <!-- Incluindo o OpenSeadragon -->
+  <!-- Inclui o OpenSeadragon -->
   <script src="openseadragon/openseadragon.min.js"></script>
 
   <style>
+    html {
+      width: 710px;
+      height: 485px;
+    }
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      width: 710px;
+      height: 485px;
+      visibility: hidden;
     }
     #focus-container {
-      margin: 20px auto;
       width: 640px;
       height: 480px;
       position: relative;
+      top: 5px;
       background-color: black;
     }
 
     #slider-container {
       position: relative;
       display: inline-block;
-      background-color: #e0e0e0; /* Cor de fundo */
+      background-color: #e0e0e0;
       background-image: url("ruler_2.png");
-      padding: 20px; /* Espaçamento interno */
-      border: 2px solid #333; /* Borda ao redor */
-      border-radius: 10px; /* Arredondar os cantos */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+      padding: 20px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       width: 440px;
       height: 13px;
       transform: rotate(90deg);
-      right: -357px;
-      top: -288px;
+      right: -327px;
+      top: -263px;
 
     }
 
@@ -45,9 +54,10 @@
       font-weight: bold;
       color: #333;
       position: relative;
+      width: 470px;
       transform: rotate(90deg);
-      right: -370px;
-      top: -310px;
+      right: -458px;
+      top: -312px;
     }
 
     #slider {
@@ -59,13 +69,14 @@
       position: relative;
       transform: rotate(270deg);
       transform-origin: top left;
-      right: -580px;
-      top: -110px;
+      right: -550px;
+      top: -86px;
       margin: auto;
     }
 
     #slider::-webkit-slider-runnable-track {
       height: 10px;
+      border-radius: 5px;
     }
 
     #slider::-webkit-slider-thumb {
@@ -80,6 +91,7 @@
 
     #slider::-moz-range-track {
         height: 10px;
+        border-radius: 5px;
     }
 
     #slider::-moz-range-thumb {
@@ -112,6 +124,7 @@
         color: transparent;
         height: 10px;
         border: none;
+        border-radius: 5px;
     }
 
     #slider::-ms-tooltip { 
@@ -122,24 +135,28 @@
 </head>
 <body>
   
+  <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
   <div id="slider-container"></div>
     <div id="slider-label">Focus Adjustment</div>
-    <input type="range" id="slider" min="1" max="5" value="1" step="1">
-  </div>
+  <input type="range" id="slider" min="1" max="5" value="1" step="1">
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+  <!-- Escolhe o número do organoide baseado na URL -->
   <script>
     window.onload = function() {
       const params = new URLSearchParams(window.location.search);
-      const organoideNumber = params.get('organoid') || 0; // Pega o organoide da URL ou usa 0 por padrão
+      const organoideNumber = params.get('organoid') || 0;
+      document.body.style.visibility = 'visible';
 
-    // Inicializando o OpenSeadragon
+    // Inicializa o OpenSeadragon
     var viewer = OpenSeadragon({
       id: "focus-container",
       prefixUrl: "openseadragon/images/",
       showNavigator: true,
       tileSources: "images/Organoid_" + organoideNumber + "/focus_1.xml",
-      blendTime: 0.1, // Controle de transição suave (0.1 segundos)
+      blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
     });
 
@@ -158,25 +175,24 @@
       viewer.viewport.zoomTo(state.zoom, state.center);
     }
 
-    // Monitorando o slider para mudança de foco
+    // Monitora o slider para mudança de foco
     slider.addEventListener('input', function() {
       var focusLevel = slider.value;
 
-      // Salvando o estado atual de zoom e centro
+      // Salva o estado atual de zoom e centro
       var zoomState = saveZoomState();
 
-      // Carregando a nova imagem de foco com blending suave
+      // Carrega a nova imagem de foco
       viewer.addTiledImage({
         tileSource: "images/Organoid_" + organoideNumber + "/focus_" + focusLevel + ".xml",
-        opacity: 0, // Inicialmente invisível
+        opacity: 1, // Inicialmente invisível
         success: function(event) {
           var tiledImage = event.item;
-          tiledImage.setOpacity(1); // Tornar visível com efeito de fade
           
-          // Restaurando o estado de zoom
+          // Restaura o estado de zoom
           restoreZoomState(zoomState);
 
-          // Remover a imagem anterior para evitar sobreposições
+          // Remove a imagem anterior para evitar sobreposições
           if (viewer.world.getItemCount() > 1) {
             var previousImage = viewer.world.getItemAt(0);
             viewer.world.removeItem(previousImage);
