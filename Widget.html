@@ -2,7 +2,7 @@
 <html>
 <head>
   <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
+  <script src="https://mardeserto.github.io/organoides.github.io/openseadragon/openseadragon.min.js"></script>
   <style>
     /* Estilos básicos e tamanho do widget */
     html, body { width: 710px; height: 500px; margin: 0; padding: 0; }
@@ -31,7 +31,7 @@
       // Inicializa o OpenSeadragon
       const viewer = OpenSeadragon({
         id: "focus-container",
-        prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
+        prefixUrl: "https://mardeserto.github.io/organoides.github.io/openseadragon/images",
         tileSources: `${hostAddress}/${folderName}_${organoideNumber}/focus_1.xml`
       });
 
