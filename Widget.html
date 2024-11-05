@@ -50,7 +50,7 @@
         const focusLevel = this.value;
         const zoomState = saveZoomState();
         viewer.addTiledImage({
-          tileSource: `${hostAddress}/Organoid_${organoideNumber}/focus_${focusLevel}.xml`,
+          tileSource: `${hostAddress}/${folderName}_${organoideNumber}/focus_${focusLevel}.xml`,
           success: function(event) {
             const tiledImage = event.item;
             restoreZoomState(zoomState);
@@ -64,7 +64,7 @@
 
       // Prepara os dados para o formulário
       JFCustomWidget.subscribe("submit", function() {
-        JFCustomWidget.sendSubmit({ valid: true, value: `Organoid_${organoideNumber} Focus_${document.getElementById("slider").value}` });
+        JFCustomWidget.sendSubmit({ valid: true, value: `${folderName}_${organoideNumber} Focus_${document.getElementById("slider").value}` });
       });
     });
   </script>
