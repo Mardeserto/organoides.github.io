@@ -2,7 +2,7 @@
 <html>
 <head>
   <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
-  <script src="https://mardeserto.github.io/organoides.github.io/openseadragon/openseadragon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
   <style>
     /* Estilos básicos e tamanho do widget */
     html, body { width: 710px; height: 500px; margin: 0; padding: 0; }
@@ -29,11 +29,15 @@
       document.getElementById("slider").max = maxFocus;
 
       // Inicializa o OpenSeadragon
-      const viewer = OpenSeadragon({
-        id: "focus-container",
-        prefixUrl: "https://mardeserto.github.io/organoides.github.io/openseadragon/images",
-        tileSources: `${hostAddress}/${folderName}_${organoideNumber}/focus_1.xml`
-      });
+      var viewer = OpenSeadragon({
+      id: "focus-container",
+      prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
+      showFullPageControl: false,
+      showNavigator: true,
+      tileSources: hostAddress + "/" + folderName + "_" + organoideNumber + "/focus_1.xml",
+      blendTime: 0.2, // Controle de transição suave (0.2 segundos)
+      immediateRender: true
+    });
 
       // Função para salvar o estado de zoom
       function saveZoomState() {
@@ -50,7 +54,7 @@
         const focusLevel = this.value;
         const zoomState = saveZoomState();
         viewer.addTiledImage({
-          tileSource: `${hostAddress}/${folderName}_${organoideNumber}/focus_${focusLevel}.xml`,
+          tileSource: hostAddress + "/" + folderName + "_" + organoideNumber + "/focus_" + focusLevel + ".xml",
           success: function(event) {
             const tiledImage = event.item;
             restoreZoomState(zoomState);
