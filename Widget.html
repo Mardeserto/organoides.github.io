@@ -164,7 +164,7 @@
   <div id="slider-container"></div>
     <div id="slider-label">Focus Adjustment</div>
   <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
-  <div class="inlineEditor form-field-label">#Error#
+  <div id="question" class="inlineEditor form-field-label">#Error#
     <label class="checkbox-label">
       <input type="radio" name="selection" value="Option 1"> Acceptable
     </label>
@@ -181,7 +181,7 @@
 
       // Atualiza o valor máximo do slider com base no número de focos
       document.querySelector("#title").textContent = `Organoid ${photoNumber}`;
-      document.querySelector("#inlineEditor.form-field-label").textContent = `Organoid ${photoNumber}`;
+      document.querySelector("#question").textContent = `Organoid ${photoNumber}`;
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
