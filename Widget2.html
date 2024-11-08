@@ -157,54 +157,50 @@
   <!-- Escolhe o número do organoide baseado na URL -->
   <script>
 
-     // Inicializa o OpenSeadragon
-    var viewer = OpenSeadragon({
+    
+      // Configuração dos valores a partir das definições do widget no Jotform
+      const hostAddress = JFCustomWidget.getWidgetSetting('hostAddress') || "https://mardeserto.github.io/organoides.github.io/images";
+      const folderName = JFCustomWidget.getWidgetSetting('folderName') || "Organoid";
+      const organoideNumber = JFCustomWidget.getWidgetSetting('organoid') || 1;
+      const maxFocus = parseInt(JFCustomWidget.getWidgetSetting('maxFocus')) || 5;
+
+      // Atualiza o valor máximo do slider com base no número de focos
+      document.getElementById("slider").max = maxFocus;
+
+      // Inicializa o OpenSeadragon
+      var viewer = OpenSeadragon({
       id: "focus-container",
       prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
       showFullPageControl: false,
       showNavigator: true,
-      tileSources: "https://mardeserto.github.io/organoides.github.io/images/Organoid_1/focus_1.xml",
+      tileSources: hostAddress + "/" + folderName + "_" + organoideNumber + "/focus_1.xml",
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
     });
 
-    var slider = document.getElementById('slider');
+      // Função para salvar o estado de zoom
+      function saveZoomState() {
+        return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
+      }
 
-    // Função para salvar o estado de zoom
-    function saveZoomState() {
-      return {
-        zoom: viewer.viewport.getZoom(),
-        center: viewer.viewport.getCenter()
-      };
-    }
+      // Função para restaurar o estado de zoom
+      function restoreZoomState(state) {
+        viewer.viewport.zoomTo(state.zoom, state.center);
+      }
 
-    // Função para restaurar o estado de zoom
-    function restoreZoomState(state) {
-      viewer.viewport.zoomTo(state.zoom, state.center);
-    }
-
-    // Monitora o slider para mudança de foco
-    slider.addEventListener('input', function() {
-      var focusLevel = slider.value;
-
-      // Salva o estado atual de zoom e centro
-      var zoomState = saveZoomState();
-
-      // Carrega a nova imagem de foco
-      viewer.addTiledImage({
-        tileSource: "https://mardeserto.github.io/organoides.github.io/images/Organoid_1/" + focusLevel + ".xml",
-        opacity: 1, // Inicialmente invisível
-        success: function(event) {
-          var tiledImage = event.item;
-          
-          // Restaura o estado de zoom
-          restoreZoomState(zoomState);
-
-          // Remove a imagem anterior para evitar sobreposições
-          if (viewer.world.getItemCount() > 1) {
-            var previousImage = viewer.world.getItemAt(0);
-            viewer.world.removeItem(previousImage);
-          }
+      // Monitora o slider para mudanças de foco
+      document.getElementById("slider").addEventListener('input', function() {
+        const focusLevel = this.value;
+        const zoomState = saveZoomState();
+        viewer.addTiledImage({
+          tileSource: hostAddress + "/" + folderName + "_" + organoideNumber + "/focus_" + focusLevel + ".xml",
+          success: function(event) {
+            const tiledImage = event.item;
+            restoreZoomState(zoomState);
+            if (viewer.world.getItemCount() > 1) {
+              const previousImage = viewer.world.getItemAt(0);
+              viewer.world.removeItem(previousImage);
+            }
         }
       });
     });
