@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Organoid</title>
+  <title>DeepZoom Slider</title>
   
   <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
   <!-- Inclui o OpenSeadragon -->
@@ -147,7 +147,7 @@
   </style>
 </head>
 <body>
-  
+  <h1>Organoid 1</h1>
   <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
   <div id="slider-container"></div>
@@ -166,6 +166,7 @@
 
       // Atualiza o valor máximo do slider com base no número de focos
       document.getElementById("slider").max = maxSlider;
+      document.h1 = "Organoid" + photoNumber
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
