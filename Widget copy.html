@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepZoom Slider</title>
+  
+  <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
+  <!-- Inclui o OpenSeadragon -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
+
+  <style>
+    /* Estilos de layout e aparência */
+    html { width: 710px; height: 585px; }
+    body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; background-color: #f4f4f4; width: 710px; height: 585px; }
+    .draggable { cursor: grab; }
+    .draggable:active { cursor: grabbing; }
+    #focus-container { width: 640px; height: 480px; background-color: black; margin: 10px auto; }
+    #slider-container { width: 440px; height: 13px; position: relative; margin: auto; transform: rotate(90deg); }
+    #slider { width: 470px; height: 10px; position: relative; transform: rotate(270deg); margin: auto; }
+    .checkbox-container { display: flex; justify-content: center; margin-top: 10px; }
+    .checkbox-label { margin: 0 15px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h3 id="title">#Error#</h3>
+  <div id="focus-container"></div>
+  <div id="slider-container">
+    <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
+  </div>
+  <div class="checkbox-container">
+    <label class="checkbox-label">
+      <input type="radio" name="selection" value="Option 1"> Acceptable
+    </label>
+    <label class="checkbox-label">
+      <input type="radio" name="selection" value="Option 2"> Inacceptable
+    </label>
+  </div>
+
+  <script>
+    JFCustomWidget.subscribe("ready", function() {
+      const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
+
+      // Atualiza o título
+      document.querySelector("#title").textContent = `Organoid ${photoNumber}`;
+
+      // Inicializa o OpenSeadragon
+      const viewer = OpenSeadragon({
+        id: "focus-container",
+        prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
+        tileSources: `https://mardeserto.github.io/organoides.github.io/images/Organoid_${photoNumber}/focus_1.xml`,
+      });
+
+      // Funções de estado de zoom
+      function saveZoomState() {
+        return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
+      }
+      function restoreZoomState(state) {
+        viewer.viewport.zoomTo(state.zoom, state.center);
+      }
+
+      // Controle de foco via slider
+      document.getElementById("slider").addEventListener('input', function() {
+        const focusLevel = this.value;
+        const zoomState = saveZoomState();
+        viewer.addTiledImage({
+          tileSource: `https://mardeserto.github.io/organoides.github.io/images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
+          success: function(event) {
+            const tiledImage = event.item;
+            restoreZoomState(zoomState);
+            if (viewer.world.getItemCount() > 1) {
+              viewer.world.removeItem(viewer.world.getItemAt(0));
+            }
+          }
+        });
+      });
+
+      // Envio de dados para o Jotform
+      JFCustomWidget.subscribe("submit", function() {
+        const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
+        JFCustomWidget.sendSubmit({ valid: true, value: `Organoid_${photoNumber}, Selected: ${selectedOption}` });
+      });
+    });
+  </script>
+</body>
+</html>
