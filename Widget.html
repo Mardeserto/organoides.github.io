@@ -158,7 +158,9 @@
   </style>
 </head>
 <body>
+<div id="main">
   <h3 id="title">#Error#</h3>
+  <span id="labelText"></span>
   <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
   <div id="slider-container"></div>
@@ -172,13 +174,15 @@
         <input type="radio" name="selection" value="Option 2"> Not acceptable
       </label>
     </div>
-
+</div>  
   <!-- Escolhe o número do organoide baseado na URL -->
   <script>
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
       var label = `Organoid ${photoNumber}`;
+      document.getElementById('labelText').innerHTML = label;
+
       // Atualiza o valor máximo do slider com base no número de focos
       document.querySelector("#title").textContent = `Organoid ${photoNumber}`;
 
@@ -223,7 +227,7 @@
       // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
         const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
-        JFCustomWidget.sendSubmit({ valid: true, value: '${selectedOption}' });
+        JFCustomWidget.sendSubmit({ valid: true, value: `${selectedOption}`});
       });
     });
   </script>
