@@ -169,7 +169,7 @@
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
 
       // Atualiza o valor máximo do slider com base no número de focos
-      document.h3 = folderName + photoNumber;
+      document.querySelector("#title").textContent = `Organoid ${photoNumber}`;
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
@@ -208,7 +208,7 @@
           }
         });
       });
-      
+
       // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
         const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
