@@ -156,8 +156,7 @@
 
   <!-- Escolhe o número do organoide baseado na URL -->
   <script>
-
-    
+    JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
       const hostAddress = JFCustomWidget.getWidgetSetting('hostAddress') || "https://mardeserto.github.io/organoides.github.io/images";
       const folderName = JFCustomWidget.getWidgetSetting('folderName') || "Organoid";
@@ -201,10 +200,15 @@
               const previousImage = viewer.world.getItemAt(0);
               viewer.world.removeItem(previousImage);
             }
-        }
+          }
+        });
+      });
+
+      // Prepara os dados para o formulário
+      JFCustomWidget.subscribe("submit", function() {
+        JFCustomWidget.sendSubmit({ valid: true, value: `${folderName}_${organoideNumber} Focus_${document.getElementById("slider").value}` });
       });
     });
   </script>
-
 </body>
 </html>
