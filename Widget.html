@@ -143,6 +143,16 @@
     #slider::-ms-tooltip { 
         display: none;
     }
+    .inlineEditor.form-field-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
+    }
+    .checkbox-label {
+        margin: 5px 0;
+        font-size: 14px;
+    }
 
   </style>
 </head>
@@ -153,12 +163,12 @@
   <div id="slider-container"></div>
     <div id="slider-label">Focus Adjustment</div>
   <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
-  <div class="checkbox-container">
+  <div class="inlineEditor form-field-label">#Error#
     <label class="checkbox-label">
       <input type="radio" name="selection" value="Option 1"> Acceptable
     </label>
     <label class="checkbox-label">
-      <input type="radio" name="selection" value="Option 2"> Inacceptable
+      <input type="radio" name="selection" value="Option 2"> Not acceptable
     </label>
   </div>
 
@@ -170,6 +180,7 @@
 
       // Atualiza o valor máximo do slider com base no número de focos
       document.querySelector("#title").textContent = `Organoid ${photoNumber}`;
+      document.querySelector("#inlineEditor form-field-label").textContent = `Organoid ${photoNumber}`;
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
@@ -212,7 +223,7 @@
       // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
         const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
-        JFCustomWidget.sendSubmit({ valid: true, value: `Organoid_${photoNumber}, Selected: ${selectedOption}` });
+        JFCustomWidget.sendSubmit({ valid: true, value: '${selectedOption}' });
       });
     });
   </script>
