@@ -147,7 +147,7 @@
   </style>
 </head>
 <body>
-  <h3>#Error#</h3>
+  <h3 id="header">#Error#</h3>
   <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
   <div id="slider-container"></div>
@@ -166,7 +166,7 @@
 
       // Atualiza o valor máximo do slider com base no número de focos
       document.getElementById("slider").max = maxSlider;
-      document.h3 = "Organoid" + photoNumber
+      document.getElementById("header") = "Organoid" + photoNumber
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
