@@ -167,10 +167,10 @@
   <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
     <div class="checkbox-container">Classify this organoid
       <label class="checkbox-label">
-        <input type="radio" name="selection" value="Option 1"> Acceptable
+        <input type="radio" name="selection" value="Acceptable"> Acceptable
       </label>
       <label class="checkbox-label">
-        <input type="radio" name="selection" value="Option 2"> Not acceptable
+        <input type="radio" name="selection" value="Not Acceptable"> Not acceptable
       </label>
     </div>
 </div>  
@@ -222,7 +222,7 @@
 
       // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
-        const selectedOption = document.querySelector('input[name="selection"]:checked')?.textContent || "No selection";
+        const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
         JFCustomWidget.sendSubmit({ valid: true, value: `${selectedOption}`});
       });
     });
