@@ -6,7 +6,7 @@
   <title>DeepZoom Slider</title>
   
   <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
-  <script src="//js.jotform.com/JotForm.js"></script>
+  
   <!-- Inclui o OpenSeadragon -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
 
@@ -182,11 +182,6 @@
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
       var label = JFCustomWidget.getWidgetSetting('QuestionLabel') || `Organoid ${photoNumber}` ;
       document.getElementById('labelText').innerHTML = label;
-      const formID = JotForm.getformID();
-      const questionID = JotForm.getquestionID();
-
-    // Atualiza o rótulo da pergunta no Jotform
-    document.querySelector(`[data-type="control_widget"][id*="${questionID}"] .form-label`).innerText = label;
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
