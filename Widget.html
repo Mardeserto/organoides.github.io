@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DeepZoom Slider</title>
   
+   <!-- Inclui o widget do Jotform -->
   <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
-  <script src="https://js.jotform.com/JotForm.js"></script>
   
   <!-- Inclui o OpenSeadragon -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
@@ -26,9 +26,9 @@
       height: 485px;
     }
     .draggable {
-      cursor: move; /* fallback: no `url()` support or images disabled */
-      cursor: url(/organoides.github.io/images/grab.cur); /* fallback: Chrome 1-21, Firefox 1.5-26, Safari 4+, IE, Edge 12-14, Android 2.1-4.4.4 */
-      cursor: grab; /* W3C standards syntax, all modern browser */
+      cursor: move; 
+      cursor: url(/organoides.github.io/images/grab.cur);
+      cursor: grab;
     }
 
     .draggable:active {
@@ -162,11 +162,14 @@
 <body>
 <div id="main">
   <h3 id="labelText"></h3>
+
   <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
   <div id="slider-container"></div>
     <div id="slider-label">Focus Adjustment</div>
   <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
+
+  <!-- Inclui as caixas de seleção-->
     <div class="checkbox-container">Classify this organoid
       <label class="checkbox-label">
         <input type="radio" name="selection" value="Acceptable"> Acceptable
@@ -176,19 +179,12 @@
       </label>
     </div>
 </div>  
-  <!-- Escolhe o número do organoide baseado na URL -->
-<script>
-  const formID = JotForm.getFormID();
-  const formID2 = JotForm.getformID();
-  const fieldID = JotForm.getFieldID();
-  const fieldID2 = JotForm.getfieldID();
-</script>
 <script>
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
       var label = JFCustomWidget.getWidgetSetting('QuestionLabel') || `Organoid ${photoNumber}` ;
-      document.getElementById('labelText').innerHTML = formID + formID2 + fieldID + fieldID2;
+      document.getElementById('labelText').innerHTML = label;
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
