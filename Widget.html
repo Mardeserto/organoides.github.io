@@ -176,8 +176,10 @@
     </div>
 </div>  
   <!-- Escolhe o número do organoide baseado na URL -->
-  <script>
-    const formID = JotForm.getFormID();
+<script>
+  const formID = JotForm.getFormID();
+</script>
+<script>
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
