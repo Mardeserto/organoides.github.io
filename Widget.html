@@ -179,6 +179,7 @@
   <script>
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
+      const formID = JotForm.getFormID();
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
       var label = JFCustomWidget.getWidgetSetting('QuestionLabel') || `Organoid ${photoNumber}` ;
       document.getElementById('labelText').innerHTML = label;
