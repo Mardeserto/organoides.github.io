@@ -6,7 +6,7 @@
   <title>Organoid</title>
   
   <!-- Inclui o OpenSeadragon -->
-  <script src="openseadragon/openseadragon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
 
   <style>
     html {
@@ -23,6 +23,17 @@
       height: 485px;
       visibility: hidden;
     }
+    .draggable {
+      cursor: move; /* fallback: no `url()` support or images disabled */
+      cursor: url(/organoides.github.io/images/grab.cur); /* fallback: Chrome 1-21, Firefox 1.5-26, Safari 4+, IE, Edge 12-14, Android 2.1-4.4.4 */
+      cursor: grab; /* W3C standards syntax, all modern browser */
+    }
+
+    .draggable:active {
+      cursor: url(/organoides.github.io/images/grabbing.cur);
+      cursor: grabbing;
+    }
+    
     #focus-container {
       width: 640px;
       height: 480px;
@@ -35,7 +46,7 @@
       position: relative;
       display: inline-block;
       background-color: #e0e0e0;
-      background-image: url("ruler_2.png");
+      background-image: url(/organoides.github.io/images/ruler_2.png);
       padding: 20px;
       border: 2px solid #333;
       border-radius: 10px;
@@ -80,33 +91,34 @@
 
     #slider::-webkit-slider-thumb {
         -webkit-appearance: none;
-        width: 20px;
-        height: 20px;
+        width: 19px;
+        height: 19px;
+        background-image: url(/organoides.github.io/images/button2.png);
         border-radius: 50%;
-        background: #b10606;
         position: relative;
         top: -5px;
     }
 
     #slider::-moz-range-track {
-        height: 10px;
         background: #b9cff7;
+        height: 10px;
         border-radius: 5px;
     }
 
     #slider::-moz-range-thumb {
-        background: #b10606;
-        height: 20px;
-        width: 20px;
+        height: 19px;
+        width: 19px;
+        background-image: url(/organoides.github.io/images/button2.png);
         border-radius: 50%;
         position: relative;
         top: -5px;
     }
 
     #slider::-ms-thumb { 
-        background: #b10606;
-        height: 20px;
-        width: 20px;
+        background: transparent;
+        height: 19px;
+        width: 19px;
+        background-image: url(/organoides.github.io/images/button2.png);
         border-radius: 50%;
         position: relative;
         top: -5px;
@@ -140,9 +152,7 @@
   <div id="focus-container"></div>
   <div id="slider-container"></div>
     <div id="slider-label">Focus Adjustment</div>
-  <input type="range" id="slider" min="1" max="5" value="1" step="1">
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
 
   <!-- Escolhe o número do organoide baseado na URL -->
   <script>
@@ -155,6 +165,7 @@
     var viewer = OpenSeadragon({
       id: "focus-container",
       prefixUrl: "openseadragon/images/",
+      showFullPageControl: false,
       showNavigator: true,
       tileSources: "images/Organoid_" + organoideNumber + "/focus_1.xml",
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)

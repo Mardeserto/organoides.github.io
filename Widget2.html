@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepZoom Slider</title>
+  
+  <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
+  <!-- Inclui o OpenSeadragon -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
+
+  <style>
+    html {
+      width: 710px;
+      height: 485px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      width: 710px;
+      height: 485px;
+    }
+    .draggable {
+      cursor: move; /* fallback: no `url()` support or images disabled */
+      cursor: url(/organoides.github.io/images/grab.cur); /* fallback: Chrome 1-21, Firefox 1.5-26, Safari 4+, IE, Edge 12-14, Android 2.1-4.4.4 */
+      cursor: grab; /* W3C standards syntax, all modern browser */
+    }
+
+    .draggable:active {
+      cursor: url(https://mardeserto.github.io/organoides.github.io/images/grabbing.cur);
+      cursor: grabbing;
+    }
+    
+    #focus-container {
+      width: 640px;
+      height: 480px;
+      position: relative;
+      top: 5px;
+      background-color: black;
+    }
+
+    #slider-container {
+      position: relative;
+      display: inline-block;
+      background-color: #e0e0e0;
+      background-image: url(https://mardeserto.github.io/organoides.github.io/images/ruler_2.png);
+      padding: 20px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 440px;
+      height: 13px;
+      transform: rotate(90deg);
+      right: -327px;
+      top: -263px;
+
+    }
+
+    #slider-label {
+      font-family: Helvetica, sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      position: relative;
+      width: 470px;
+      transform: rotate(90deg);
+      right: -458px;
+      top: -312px;
+    }
+
+    #slider {
+      -webkit-appearance: none;
+      width: 470px;
+      height: 10px;
+      position: relative;
+      transform: rotate(270deg);
+      transform-origin: top left;
+      right: -550px;
+      top: -86px;
+      margin: auto;
+    }
+
+    #slider::-webkit-slider-runnable-track {
+      background: #b9cff7;
+      height: 10px;
+      border-radius: 5px;
+    }
+
+    #slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 19px;
+        height: 19px;
+        background-image: url(https://mardeserto.github.io/organoides.github.io/images/button2.png);
+        border-radius: 50%;
+        position: relative;
+        top: -5px;
+    }
+
+    #slider::-moz-range-track {
+        background: #b9cff7;
+        height: 10px;
+        border-radius: 5px;
+    }
+
+    #slider::-moz-range-thumb {
+        height: 19px;
+        width: 19px;
+        background-image: url(https://mardeserto.github.io/organoides.github.io/images/button2.png);
+        border-radius: 50%;
+        position: relative;
+        top: -5px;
+    }
+
+    #slider::-ms-thumb { 
+        background: transparent;
+        height: 19px;
+        width: 19px;
+        background-image: url(https://mardeserto.github.io/organoides.github.io/images/button2.png);
+        border-radius: 50%;
+        position: relative;
+        top: -5px;
+    }
+
+    #slider::-ms-ticks-after { 
+        display: none; 
+    }
+
+    #slider::-ms-ticks-before { 
+        display: none; 
+    }
+
+    #slider::-ms-track { 
+        background: #b9cff7;
+        color: transparent;
+        height: 10px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    #slider::-ms-tooltip { 
+        display: none;
+    }
+
+  </style>
+</head>
+<body>
+  <h3>#Error#</h3>
+  <!-- Inclui e ajusta o slider de ajuste de foco -->
+  <div id="focus-container"></div>
+  <div id="slider-container"></div>
+    <div id="slider-label">Focus Adjustment</div>
+  <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
+
+  <!-- Escolhe o número do organoide baseado na URL -->
+  <script>
+    JFCustomWidget.subscribe("ready", function() {
+      // Configuração dos valores a partir das definições do widget no Jotform
+      const hostAddress = JFCustomWidget.getWidgetSetting('hostAddress');
+      const folderName = JFCustomWidget.getWidgetSetting('folderName');
+      const subfolderName = JFCustomWidget.getWidgetSetting('subfolderName');
+      const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
+      var maxSlider = JFCustomWidget.getWidgetSetting('maxSlider');
+
+      // Atualiza o valor máximo do slider com base no número de focos
+      document.getElementById("slider").max = maxSlider;
+      document.h3 = folderName + photoNumber;
+
+      // Inicializa o OpenSeadragon
+      var viewer = OpenSeadragon({
+      id: "focus-container",
+      prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
+      showFullPageControl: false,
+      showNavigator: true,
+      tileSources: hostAddress + "/" + folderName + "_" + photoNumber + "/" + subfolderName + "_1.xml",
+      blendTime: 0.2, // Controle de transição suave (0.2 segundos)
+      immediateRender: true
+    });
+
+      // Função para salvar o estado de zoom
+      function saveZoomState() {
+        return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
+      }
+
+      // Função para restaurar o estado de zoom
+      function restoreZoomState(state) {
+        viewer.viewport.zoomTo(state.zoom, state.center);
+      }
+
+      // Monitora o slider para mudanças de foco
+      document.getElementById("slider").addEventListener('input', function() {
+        const focusLevel = this.value;
+        const zoomState = saveZoomState();
+        viewer.addTiledImage({
+          tileSource: hostAddress + "/" + folderName + "_" + photoNumber + "/" + subfolderName + "_" + focusLevel + ".xml",
+          success: function(event) {
+            const tiledImage = event.item;
+            restoreZoomState(zoomState);
+            if (viewer.world.getItemCount() > 1) {
+              const previousImage = viewer.world.getItemAt(0);
+              viewer.world.removeItem(previousImage);
+            }
+          }
+        });
+      });
+
+      // Prepara os dados para o formulário
+      JFCustomWidget.subscribe("submit", function() {
+        JFCustomWidget.sendSubmit({ valid: true, value: `${folderName}_${photoNumber} Focus_${document.getElementById("slider").value}` });
+      });
+    });
+  </script>
+</body>
+</html>
