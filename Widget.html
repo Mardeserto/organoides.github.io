@@ -192,7 +192,7 @@
       prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
       showFullPageControl: false,
       showNavigator: true,
-      tileSources: `/images/Organoid_${photoNumber}/focus_1.xml`,
+      tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
     });
@@ -212,7 +212,7 @@
         const focusLevel = this.value;
         const zoomState = saveZoomState();
         viewer.addTiledImage({
-          tileSource: `/images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
+          tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
           success: function(event) {
             const tiledImage = event.item;
             restoreZoomState(zoomState);
