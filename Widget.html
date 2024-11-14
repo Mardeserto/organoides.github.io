@@ -162,6 +162,7 @@
 <body>
 <div id="main">
   <h3 id="labelText"></h3>
+  <p id="infoText">Information will appear here based on label.</p>
 
   <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
@@ -180,10 +181,26 @@
     </div>
 </div>  
 <script>
+    // Ler CSV e gravar em matriz
+    async function fetchCSV(filePath) {
+    const response = await fetch(filePath);
+    const text = await response.text();
+    return text.split("\n").slice(1).map(line => {
+      const [label, value] = line.split(",");
+      return { label: label.trim(), value: value.trim() };
+    });
+  }
+
+  // Function to find the information based on the label
+  async function setLabelInfo(label) {
+    const data = await fetchCSV("Organoid_names.csv"); // path to your CSV file
+    const found = data.find(row => row.label === label);
+    document.getElementById("infoText").innerText = found ? found.value : "No information available.";
+  }
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
-      var label = JFCustomWidget.getWidgetSetting('QuestionLabel') || `Organoid ${photoNumber}` ;
+      var label = JFCustomWidget.getWidgetSetting('QuestionLabel') || `Organoid_${photoNumber}` ;
       document.getElementById('labelText').innerHTML = label;
 
       // Inicializa o OpenSeadragon
