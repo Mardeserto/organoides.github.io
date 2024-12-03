@@ -198,7 +198,7 @@
   async function setLabelInfo(label) {
     const data = await fetchCSV("20241203_Organoid_Names.csv"); // path to your CSV file
     const found = data.find(row => row.label === label);
-    document.getElementById("infoText").innerText = found ? found.value : "No information available.";
+    document.getElementById("infoText").innerHTML = found ? found.value : "No information available.";
   }
       // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
