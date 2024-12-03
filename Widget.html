@@ -244,7 +244,8 @@
       // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
         const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
-        JFCustomWidget.sendSubmit({ valid: true, value: `${selectedOption}`});
+        const organoidName = document.getElementById("infoText").innerText = found ? found.value : "No information available.";
+        JFCustomWidget.sendSubmit({ valid: true, value: `${organoidName};${selectedOption}`});
       });
     });
   </script>
