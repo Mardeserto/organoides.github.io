@@ -201,7 +201,8 @@
 
   // Function to find the information based on the label
   function setLabelInfo(label) {
-    const data = fetchCSV('/20241203_Organoid_Names.csv'); // path to your CSV file
+    var CSVPath = "20241203_Organoid_Names.csv"
+    const data = fetchCSV(CSVPath); // path to your CSV file
     const found = data.find(row => row.label === label);
     document.getElementById('found.value').innerHTML = found ? found.value : "No information available.";
   }
