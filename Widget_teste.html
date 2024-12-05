@@ -187,8 +187,8 @@
 </div>  
 <script>
     // Ler CSV e gravar em matriz
-   function fetchCSV(filePath) {
-    const response = fetch(filePath);
+   function fetchCSV(CSVPath) {
+    const response = fetch(CSVPath);
     const text = response.text();
     return text.split("\n").slice(1).map(line => {
       const [label, value] = line.split(",");
