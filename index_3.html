@@ -3,204 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Organoid</title>
+  <title>CSV Fetch and Visualization</title>
   
-  <!-- Inclui o OpenSeadragon -->
-  <script src="openseadragon/openseadragon.min.js"></script>
-
   <style>
-    html {
-      width: 710px;
-      height: 485px;
-    }
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
+      margin: 20px;
       background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      width: 710px;
-      height: 485px;
-      visibility: hidden;
     }
-    #focus-container {
-      width: 640px;
-      height: 480px;
-      position: relative;
-      top: 5px;
-      background-color: black;
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
-
-    #slider-container {
-      position: relative;
-      display: inline-block;
-      background-color: #e0e0e0;
-      background-image: url("ruler_2.png");
-      padding: 20px;
-      border: 2px solid #333;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 440px;
-      height: 13px;
-      transform: rotate(90deg);
-      right: -327px;
-      top: -263px;
-
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
     }
-
-    #slider-label {
-      font-family: Helvetica, sans-serif;
-      font-size: 18px;
-      font-weight: bold;
-      color: #333;
-      position: relative;
-      width: 470px;
-      transform: rotate(90deg);
-      right: -458px;
-      top: -312px;
+    th {
+      background-color: #f2f2f2;
     }
-
-    #slider {
-      -webkit-appearance: none;
-      width: 470px;
-      height: 10px;
-      position: relative;
-      overflow: hidden;
-      transform: rotate(270deg);
-      transform-origin: top left;
-      right: -550px;
-      top: -86px;
-      margin: auto;
-    }
-
-    #slider::-webkit-slider-runnable-track {
-      height: 10px;
-      border-radius: 5px;
-    }
-
-    #slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #b10606;
-        position: relative;
-        top: -5px;
-    }
-
-    #slider::-moz-range-track {
-        height: 10px;
-        border-radius: 5px;
-    }
-
-    #slider::-moz-range-thumb {
-        background: #b10606;
-        height: 20px;
-        width: 20px;
-        border-radius: 50%;
-        position: relative;
-        top: -5px;
-    }
-
-    #slider::-ms-thumb { 
-        background: #b10606;
-        height: 20px;
-        width: 20px;
-        border-radius: 50%;
-        position: relative;
-        top: -5px;
-    }
-
-    #slider::-ms-ticks-after { 
-        display: none; 
-    }
-
-    #slider::-ms-ticks-before { 
-        display: none; 
-    }
-
-    #slider::-ms-track { 
-        color: transparent;
-        height: 10px;
-        border: none;
-        border-radius: 5px;
-    }
-
-    #slider::-ms-tooltip { 
-        display: none;
-    }
-
   </style>
 </head>
 <body>
-  
-  <!-- Inclui e ajusta o slider de ajuste de foco -->
-  <div id="focus-container"></div>
-  <div id="slider-container"></div>
-    <div id="slider-label">Focus Adjustment</div>
-  <input type="range" id="slider" min="1" max="5" value="1" step="1">
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<h1>CSV Fetch and Variable Visualization</h1>
 
-  <!-- Escolhe o número do organoide baseado na URL -->
-  <script>
-    window.onload = function() {
+<p>Fetch status: <span id="fetch-status">Loading...</span></p>
+<p>Label variable: <span id="label-variable">Undefined</span></p>
+<p>CSV content:</p>
+<table id="csv-table">
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Information</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Content will be populated dynamically -->
+  </tbody>
+</table>
+
+<script>
+  // Mock "label" variable for testing
+  window.onload = function() {
       const params = new URLSearchParams(window.location.search);
       const organoideNumber = params.get('organoid') || 0;
-      document.body.style.visibility = 'visible';
+      var label = `Organoid_${organoideNumber}` ;
 
-    // Inicializa o OpenSeadragon
-    var viewer = OpenSeadragon({
-      id: "focus-container",
-      prefixUrl: "openseadragon/images/",
-      showNavigator: true,
-      tileSources: "images/Organoid_" + organoideNumber + "/focus_1.xml",
-      blendTime: 0.2, // Controle de transição suave (0.2 segundos)
-      immediateRender: true
-    });
+  // Update label variable on the page
+  document.getElementById("label-variable").textContent = label;
 
-    var slider = document.getElementById('slider');
+  // Fetch CSV file and process
+  const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
+  fetch(csvFilePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then(csvText => {
+      console.log("CSV file successfully fetched.");
+      document.getElementById("fetch-status").textContent = "Success";
 
-    // Função para salvar o estado de zoom
-    function saveZoomState() {
-      return {
-        zoom: viewer.viewport.getZoom(),
-        center: viewer.viewport.getCenter()
-      };
-    }
+      // Parse CSV text into rows and cells
+      const rows = csvText.split("\n").map(row => row.split(","));
 
-    // Função para restaurar o estado de zoom
-    function restoreZoomState(state) {
-      viewer.viewport.zoomTo(state.zoom, state.center);
-    }
-
-    // Monitora o slider para mudança de foco
-    slider.addEventListener('input', function() {
-      var focusLevel = slider.value;
-
-      // Salva o estado atual de zoom e centro
-      var zoomState = saveZoomState();
-
-      // Carrega a nova imagem de foco
-      viewer.addTiledImage({
-        tileSource: "images/Organoid_" + organoideNumber + "/focus_" + focusLevel + ".xml",
-        opacity: 1, // Inicialmente invisível
-        success: function(event) {
-          var tiledImage = event.item;
-          
-          // Restaura o estado de zoom
-          restoreZoomState(zoomState);
-
-          // Remove a imagem anterior para evitar sobreposições
-          if (viewer.world.getItemCount() > 1) {
-            var previousImage = viewer.world.getItemAt(0);
-            viewer.world.removeItem(previousImage);
-          }
+      // Find the information corresponding to the "label" variable
+      let matchingInfo = "Not found";
+      rows.forEach(([variable, info]) => {
+        if (variable === label) {
+          matchingInfo = info;
         }
       });
+
+      // Populate table with CSV content
+      const tbody = document.getElementById("csv-table").querySelector("tbody");
+      rows.forEach(([variable, info]) => {
+        const tr = document.createElement("tr");
+        const tdVariable = document.createElement("td");
+        const tdInfo = document.createElement("td");
+        tdVariable.textContent = variable;
+        tdInfo.textContent = info;
+        tr.appendChild(tdVariable);
+        tr.appendChild(tdInfo);
+        tbody.appendChild(tr);
+      });
+
+      // Log variables for debugging
+      console.log("Label:", label);
+      console.log("Matching Info:", matchingInfo);
+    })
+    .catch(error => {
+      console.error(error);
+      document.getElementById("fetch-status").textContent = `Error: ${error.message}`;
     });
-    };
-  </script>
+  };
+</script>
 
 </body>
 </html>
