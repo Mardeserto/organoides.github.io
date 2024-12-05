@@ -161,8 +161,13 @@
 </head>
 <body>
 <div id="main">
-  <h3 id="labelText">Verificação</h3>
-  <p id="infoText">Verificação.</p>
+  <h3 id="label">label var</h3>
+  <h3 id="response">response var</h3>
+  <h3 id="text">text var</h3>
+  <h3 id="value">value var</h3>
+  <h3 id="data">data var</h3>
+  <h3 id="found">found var</h3>
+  <h3 id="found.value">found.value var</h3>
 
   <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
@@ -182,7 +187,7 @@
 </div>  
 <script>
     // Ler CSV e gravar em matriz
-    async function fetchCSV(filePath) {
+   async function fetchCSV(filePath) {
     const response = await fetch(filePath);
     const text = await response.text();
     return text.split("\n").slice(1).map(line => {
@@ -196,14 +201,18 @@
 
   // Function to find the information based on the label
   async function setLabelInfo(label) {
-    const data = await fetchCSV("20241203_Organoid_Names.csv"); // path to your CSV file
+    const data = await fetchCSV("/20241203_Organoid_Names.csv"); // path to your CSV file
     const found = data.find(row => row.label === label);
-    document.getElementById("infoText").innerHTML = found ? found.value : "No information available.";
+    document.getElementById('found.value').innerHTML = found ? found.value : "No information available.";
   }
       // Configuração dos valores a partir das definições do widget no Jotform
-      const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
       var label = `Organoid_${organoideNumber}` ;
-      document.getElementById('labelText').innerHTML = label;
+      document.getElementById('labelText').innerHTML = "Label" + label;
+      document.getElementById('response').innerHTML = "Response" + response;
+      document.getElementById('text').innerHTML = "Text" + label;
+      document.getElementById('value').innerHTML = "Value" + label;
+      document.getElementById('data').innerHTML = "Data" + label;
+      document.getElementById('found').innerHTML = "Found" + label;
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
