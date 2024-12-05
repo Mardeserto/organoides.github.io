@@ -187,9 +187,9 @@
 </div>  
 <script>
     // Ler CSV e gravar em matriz
-   async function fetchCSV(filePath) {
-    const response = await fetch(filePath);
-    const text = await response.text();
+   function fetchCSV(filePath) {
+    const response = fetch(filePath);
+    const text = response.text();
     return text.split("\n").slice(1).map(line => {
       const [label, value] = line.split(",");
       return { label: label.trim(), value: value.trim() };
@@ -200,8 +200,8 @@
       const organoideNumber = params.get('organoid') || 0;
 
   // Function to find the information based on the label
-  async function setLabelInfo(label) {
-    const data = await fetchCSV("/20241203_Organoid_Names.csv"); // path to your CSV file
+  function setLabelInfo(label) {
+    const data = fetchCSV("/20241203_Organoid_Names.csv"); // path to your CSV file
     const found = data.find(row => row.label === label);
     document.getElementById('found.value').innerHTML = found ? found.value : "No information available.";
   }
