@@ -162,12 +162,7 @@
 <body>
 <div id="main">
   <h3 id="label">label var</h3>
-  <h3 id="response">response var</h3>
-  <h3 id="text">text var</h3>
-  <h3 id="value">value var</h3>
-  <h3 id="data">data var</h3>
-  <h3 id="found">found var</h3>
-  <h3 id="found.value">found.value var</h3>
+  <h3 id="matching-info">matchingInfo var</h3>
 
   <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
@@ -186,34 +181,38 @@
     </div>
 </div>  
 <script>
-    // Ler CSV e gravar em matriz
-   function fetchCSV(CSVPath) {
-    const response = fetch(CSVPath);
-    const text = response.text();
-    return text.split("\n").slice(1).map(line => {
-      const [label, value] = line.split(",");
-      return { label: label.trim(), value: value.trim() };
-    });
-  }
   window.onload = function() {
       const params = new URLSearchParams(window.location.search);
       const organoideNumber = params.get('organoid') || 0;
-
-  // Function to find the information based on the label
-  function setLabelInfo(label) {
-    var CSVPath = "20241203_Organoid_Names.csv"
-    const data = fetchCSV(CSVPath); // path to your CSV file
-    const found = data.find(row => row.label === label);
-    document.getElementById('found.value').innerHTML = found ? found.value : "No information available.";
-  }
-      // Configuração dos valores a partir das definições do widget no Jotform
       var label = `Organoid_${organoideNumber}` ;
-      document.getElementById('label').innerHTML = "Label :" + label;
-      document.getElementById('response').innerHTML = "Response :" + response;
-      document.getElementById('text').innerHTML = "Text :" + text;
-      document.getElementById('value').innerHTML = "Value :" + value;
-      document.getElementById('data').innerHTML = "Data :" + data;
-      document.getElementById('found').innerHTML = "Found :" + found;
+      
+      const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
+  fetch(csvFilePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then(csvText => {
+
+      // Parse CSV text into rows and cells
+      const rows = csvText.split("\n").map(row => row.split(","));
+
+      // Find the information corresponding to the "label" variable
+      let matchingInfo = "Not found";
+      rows.forEach(([variable, info]) => {
+        if (variable === label) {
+          matchingInfo = info;
+        }
+      });
+
+      //Update matchingInfo variable on text 
+      document.getElementById("matching-info").textContent = matchingInfo;
+      document.getElementById('label').textContent = label;
+
+    })
+
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
