@@ -31,6 +31,7 @@
 
 <p>Fetch status: <span id="fetch-status">Loading...</span></p>
 <p>Label variable: <span id="label-variable">Undefined</span></p>
+<p>Matching Info:<span id="matching-info">Undefined</span></p>
 <p>CSV content:</p>
 <table id="csv-table">
   <thead>
@@ -53,6 +54,7 @@
 
   // Update label variable on the page
   document.getElementById("label-variable").textContent = label;
+  document.getElementById("matching-info").textContent = matchingInfo;
 
   // Fetch CSV file and process
   const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
