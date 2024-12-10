@@ -253,7 +253,9 @@
       // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
         const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
-        JFCustomWidget.sendSubmit({ valid: true, value: `${label};${matchingInfo};${selectedOption}`});
+        const orgLabel = label;
+        const orgName = matchingInfo;
+        JFCustomWidget.sendSubmit({ valid: true, value: `${orgLabel},${orgName},${selectedOption}`});
       });
     });
   </script>
