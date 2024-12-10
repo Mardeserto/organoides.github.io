@@ -207,10 +207,6 @@
         }
       });
 
-      //Update matchingInfo variable on text 
-      document.getElementById("matching-info").textContent = matchingInfo;
-      document.getElementById('label').textContent = label;
-
     })
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
@@ -250,6 +246,10 @@
         });
       });
 
+      //Update matchingInfo variable on text 
+      document.getElementById("matching-info").textContent = matchingInfo;
+      document.getElementById('label').textContent = label;
+      
       // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
         const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
