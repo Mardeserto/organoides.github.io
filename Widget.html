@@ -161,8 +161,8 @@
 </head>
 <body>
 <div id="main">
-  <h3 id="labelText"></h3>
-  <p id="infoText">Verificação.</p>
+  <h3 id="label"></h3>
+  <p id="matching-info"> Verificação.</p>
 
   <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
@@ -181,28 +181,37 @@
     </div>
 </div>  
 <script>
-    // Ler CSV e gravar em matriz
-    async function fetchCSV(filePath) {
-    const response = await fetch(filePath);
-    const text = await response.text();
-    return text.split("\n").slice(1).map(line => {
-      const [label, value] = line.split(",");
-      return { label: label.trim(), value: value.trim() };
-    });
-  }
-
-  // Function to find the information based on the label
-  async function setLabelInfo(label) {
-    const data = await fetchCSV("20241203_Organoid_Names.csv"); // path to your CSV file
-    const found = data.find(row => row.label === label);
-    document.getElementById("infoText").innerText = found ? found.value : "No information available.";
-  }
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
-      var label = JFCustomWidget.getWidgetSetting('QuestionLabel') || `Organoid_${photoNumber}` ;
-      document.getElementById('labelText').innerHTML = label;
+      const label = JFCustomWidget.getWidgetSetting('QuestionLabel') || `Organoid_${photoNumber}` ;
 
+      const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
+  fetch(csvFilePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then(csvText => {
+
+      // Parse CSV text into rows and cells
+      const rows = csvText.split("\n").map(row => row.split(","));
+
+      // Find the information corresponding to the "label" variable
+      let matchingInfo = "Not found";
+      rows.forEach(([variable, info]) => {
+        if (variable === label) {
+          matchingInfo = info;
+        }
+      });
+
+      //Update matchingInfo variable on text 
+      document.getElementById("matching-info").textContent = matchingInfo;
+      document.getElementById('label').textContent = label;
+
+    })
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
       id: "focus-container",
@@ -244,8 +253,7 @@
       // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
         const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
-        const organoidName = document.getElementById("infoText").innerText = found ? found.value : "No information available.";
-        JFCustomWidget.sendSubmit({ valid: true, value: `${organoidName};${selectedOption}`});
+        JFCustomWidget.sendSubmit({ valid: true, value: `${label};${matchingInfo};${selectedOption}`});
       });
     });
   </script>
