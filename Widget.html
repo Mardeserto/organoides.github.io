@@ -255,7 +255,7 @@
         const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
         const orgLabel = label;
         const orgName = matchingInfo;
-        JFCustomWidget.sendSubmit({ valid: true, value: `${orgLabel},${orgName},${selectedOption}`});
+        JFCustomWidget.sendSubmit({ valid: true, value: `${selectedOption}`});
       });
     });
   </script>
