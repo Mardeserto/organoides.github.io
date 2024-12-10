@@ -207,6 +207,10 @@
         }
       });
     
+      //Update matchingInfo variable on text 
+      document.getElementById("matching-info").textContent = matchingInfo;
+      document.getElementById('label').textContent = label;
+
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
       id: "focus-container",
