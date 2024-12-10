@@ -206,7 +206,7 @@
           matchingInfo = info;
         }
       });
-    })
+    
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
       id: "focus-container",
@@ -252,6 +252,7 @@
         const orgName = matchingInfo;
         JFCustomWidget.sendSubmit({ valid: true, value: `${orgLabel},${orgName},${selectedOption}`});
       });
+    })
     });
   </script>
 </body>
