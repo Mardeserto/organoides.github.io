@@ -206,12 +206,12 @@
           matchingInfo = info;
         }
       });
+    })
 
       //Update matchingInfo variable on text 
       document.getElementById("matching-info").textContent = matchingInfo;
       document.getElementById('label').textContent = label;
-      
-    })
+
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
       id: "focus-container",
@@ -255,7 +255,7 @@
         const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
         const orgLabel = label;
         const orgName = matchingInfo;
-        JFCustomWidget.sendSubmit({ valid: true, value: `${selectedOption}`});
+        JFCustomWidget.sendSubmit({ valid: true, value: `${orgLabel},${orgName},${selectedOption}`});
       });
     });
   </script>
