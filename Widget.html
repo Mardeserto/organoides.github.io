@@ -145,14 +145,25 @@
     #slider::-ms-tooltip { 
         display: none;
     }
-    .checkbox-container {
+    .checkbox-org-container {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         margin-top: -65px;
         margin-left: 10px;
     }
-    .checkbox-label {
+    .checkbox-org-label {
+        margin-top: 8px;
+        font-size: 18px;
+    }
+    .checkbox-photo-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: -65px;
+        margin-left: 10px;
+    }
+    .checkbox-photo-label {
         margin-top: 8px;
         font-size: 18px;
     }
@@ -170,22 +181,22 @@
   <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
 
   <!-- Inclui as caixas de seleção-->
-    <div class="checkbox-container">Would you use this organoid in your experiments?
-      <label class="checkbox-label">
-        <input type="radio" name="selection" value="Acceptable"> Acceptable
+    <div class="checkbox-org-container">Would you use this organoid in your experiments?
+      <label class="checkbox-org-label">
+        <input type="radio" name="selection-org" value="Acceptable"> Acceptable
       </label>
-      <label class="checkbox-label">
-        <input type="radio" name="selection" value="Not Acceptable"> Not acceptable
+      <label class="checkbox-org-label">
+        <input type="radio" name="selection-org" value="Not Acceptable"> Not acceptable
       </label>
     </div>
-    <div class="checkbox-container">How would you rate the quality of the image of this orgaoid?
-      <label class="checkbox-photo">
+    <div class="checkbox-photo-container">How would you rate the quality of the image of this orgaoid?
+      <label class="checkbox-photo-label">
         <input type="radio" name="selection-photo" value="Good"> Good
       </label>
-      <label class="checkbox-photo">
+      <label class="checkbox-photo-label">
         <input type="radio" name="selection-photo" value="Reasonable"> Reasonable
       </label>
-      <label class="checkbox-photo">
+      <label class="checkbox-photo-label">
         <input type="radio" name="selection-photo" value="Bad"> Bad
       </label>
     </div>
@@ -262,7 +273,7 @@
 
       // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
-        const orgClass = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
+        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || "No selection";
         const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || "No selection";
         const orgLabel = label;
         const orgName = matchingInfo;
