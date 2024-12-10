@@ -162,7 +162,6 @@
 <body>
 <div id="main">
   <h3 id="label"></h3>
-  <p id="matching-info"> Verificação.</p>
 
   <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
@@ -171,7 +170,7 @@
   <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
 
   <!-- Inclui as caixas de seleção-->
-    <div class="checkbox-container">Classify this organoid
+    <div class="checkbox-container">Would you use this organoid in your experiments?
       <label class="checkbox-label">
         <input type="radio" name="selection" value="Acceptable"> Acceptable
       </label>
@@ -179,7 +178,19 @@
         <input type="radio" name="selection" value="Not Acceptable"> Not acceptable
       </label>
     </div>
-</div>  
+    <div class="checkbox-container">How would you rate the quality of the image of this orgaoid?
+      <label class="checkbox-photo">
+        <input type="radio" name="selection-photo" value="Good"> Good
+      </label>
+      <label class="checkbox-photo">
+        <input type="radio" name="selection-photo" value="Reasonable"> Reasonable
+      </label>
+      <label class="checkbox-photo">
+        <input type="radio" name="selection-photo" value="Bad"> Bad
+      </label>
+    </div>
+</div>
+
 <script>
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
@@ -251,10 +262,11 @@
 
       // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
-        const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
+        const orgClass = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
+        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || "No selection";
         const orgLabel = label;
         const orgName = matchingInfo;
-        JFCustomWidget.sendSubmit({ valid: true, value: `${orgLabel},${orgName},${selectedOption}`});
+        JFCustomWidget.sendSubmit({ valid: true, value: `${orgLabel},${orgName},${orgClass},${photoQual}`});
       });
     })
     });
