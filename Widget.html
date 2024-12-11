@@ -269,14 +269,6 @@
         });
       });
 
-      // Add event listeners to monitor user selections
-      document.querySelectorAll('input[name="selection-org"]').forEach(input => {
-        input.addEventListener('change', checkSelections);
-      });
-      document.querySelectorAll('input[name="selection-photo"]').forEach(input => {
-        input.addEventListener('change', checkSelections);
-      });
-
       // Submission logic
       JFCustomWidget.subscribe("submit", function() {
         const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
