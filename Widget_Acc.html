@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DeepZoom Slider</title>
   
+   <!-- Inclui o widget do Jotform -->
   <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
+  
   <!-- Inclui o OpenSeadragon -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
 
@@ -24,13 +26,13 @@
       height: 485px;
     }
     .draggable {
-      cursor: move; /* fallback: no `url()` support or images disabled */
-      cursor: url(/organoides.github.io/images/grab.cur); /* fallback: Chrome 1-21, Firefox 1.5-26, Safari 4+, IE, Edge 12-14, Android 2.1-4.4.4 */
-      cursor: grab; /* W3C standards syntax, all modern browser */
+      cursor: move; 
+      cursor: url(/organoides.github.io/images/grab.cur);
+      cursor: grab;
     }
 
     .draggable:active {
-      cursor: url(https://mardeserto.github.io/organoides.github.io/images/grabbing.cur);
+      cursor: url(/organoides.github.io/images/grabbing.cur);
       cursor: grabbing;
     }
     
@@ -46,7 +48,7 @@
       position: relative;
       display: inline-block;
       background-color: #e0e0e0;
-      background-image: url(https://mardeserto.github.io/organoides.github.io/images/ruler_2.png);
+      background-image: url(/organoides.github.io/images/ruler_2.png);
       padding: 20px;
       border: 2px solid #333;
       border-radius: 10px;
@@ -93,7 +95,7 @@
         -webkit-appearance: none;
         width: 19px;
         height: 19px;
-        background-image: url(https://mardeserto.github.io/organoides.github.io/images/button2.png);
+        background-image: url(/organoides.github.io/images/button2.png);
         border-radius: 50%;
         position: relative;
         top: -5px;
@@ -108,7 +110,7 @@
     #slider::-moz-range-thumb {
         height: 19px;
         width: 19px;
-        background-image: url(https://mardeserto.github.io/organoides.github.io/images/button2.png);
+        background-image: url(/organoides.github.io/images/button2.png);
         border-radius: 50%;
         position: relative;
         top: -5px;
@@ -118,7 +120,7 @@
         background: transparent;
         height: 19px;
         width: 19px;
-        background-image: url(https://mardeserto.github.io/organoides.github.io/images/button2.png);
+        background-image: url(/organoides.github.io/images/button2.png);
         border-radius: 50%;
         position: relative;
         top: -5px;
@@ -147,26 +149,45 @@
   </style>
 </head>
 <body>
-  <h3>#Error#</h3>
+<div id="main">
+  <h3 id="label"></h3>
+
   <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
   <div id="slider-container"></div>
     <div id="slider-label">Focus Adjustment</div>
   <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
+</div>
 
-  <!-- Escolhe o número do organoide baseado na URL -->
-  <script>
+<script>
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
-      const hostAddress = JFCustomWidget.getWidgetSetting('hostAddress');
-      const folderName = JFCustomWidget.getWidgetSetting('folderName');
-      const subfolderName = JFCustomWidget.getWidgetSetting('subfolderName');
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
-      var maxSlider = JFCustomWidget.getWidgetSetting('maxSlider');
+      const label = `Organoid_${photoNumber}` ;
 
-      // Atualiza o valor máximo do slider com base no número de focos
-      document.getElementById("slider").max = maxSlider;
-      document.h3 = folderName + photoNumber;
+      const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
+  fetch(csvFilePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then(csvText => {
+
+      // Parse CSV text into rows and cells
+      const rows = csvText.split("\n").map(row => row.split(","));
+
+      // Find the information corresponding to the "label" variable
+      let matchingInfo = "Not found";
+      rows.forEach(([variable, info]) => {
+        if (variable === label) {
+          matchingInfo = info;
+        }
+      });
+    
+      //Update matchingInfo variable on text 
+      document.getElementById('label').textContent = label;
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
@@ -174,7 +195,7 @@
       prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
       showFullPageControl: false,
       showNavigator: true,
-      tileSources: hostAddress + "/" + folderName + "_" + photoNumber + "/" + subfolderName + "_1.xml",
+      tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
     });
@@ -194,7 +215,7 @@
         const focusLevel = this.value;
         const zoomState = saveZoomState();
         viewer.addTiledImage({
-          tileSource: hostAddress + "/" + folderName + "_" + photoNumber + "/" + subfolderName + "_" + focusLevel + ".xml",
+          tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
           success: function(event) {
             const tiledImage = event.item;
             restoreZoomState(zoomState);
@@ -206,11 +227,19 @@
         });
       });
 
-      // Prepara os dados para o formulário
+      // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
-        JFCustomWidget.sendSubmit({ valid: true, value: `${folderName}_${photoNumber} Focus_${document.getElementById("slider").value}` });
+          // Collect data and submit it
+          const orgLabel = label;
+          const orgName = matchingInfo;
+          JFCustomWidget.sendSubmit({
+            valid: true,
+            value: `Acquaintance fase: ${orgLabel},${orgName}`
+          });
       });
+    })
     });
+    
   </script>
 </body>
 </html>

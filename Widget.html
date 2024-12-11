@@ -206,7 +206,7 @@
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
-      const label = JFCustomWidget.getWidgetSetting('QuestionLabel') || `Organoid_${photoNumber}` ;
+      const label = `Organoid_${photoNumber}` ;
 
       const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
   fetch(csvFilePath)
