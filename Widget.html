@@ -269,18 +269,40 @@
         });
       });
 
-      // Envio de dados para o Jotform
+      // Initialize the valid state as false
+      JFCustomWidget.sendSubmit({ valid: false });
+
+      // Function to check if all required options are selected
+      function checkSelections() {
+        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+
+        if (orgClass && photoQual) {
+          // Signal that the widget is ready for submission
+          JFCustomWidget.sendSubmit({ valid: true });
+        } else {
+          // Ensure the valid state is false if selections are incomplete
+          JFCustomWidget.sendSubmit({ valid: false });
+        }
+      }
+
+      // Add event listeners to monitor user selections
+      document.querySelectorAll('input[name="selection-org"]').forEach(input => {
+        input.addEventListener('change', checkSelections);
+      });
+      document.querySelectorAll('input[name="selection-photo"]').forEach(input => {
+        input.addEventListener('change', checkSelections);
+      });
+
+      // Submission logic
       JFCustomWidget.subscribe("submit", function() {
         const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
         const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
 
         if (!orgClass || !photoQual) {
-          // Notify the user about the validation error
           alert("Please select an option for both questions");
-          // Prevent submission
           JFCustomWidget.sendSubmit({ valid: false });
         } else {
-          // Collect data and submit it
           const orgLabel = label;
           const orgName = matchingInfo;
           JFCustomWidget.sendSubmit({
@@ -289,6 +311,7 @@
           });
         }
       });
+
     })
     });
     
