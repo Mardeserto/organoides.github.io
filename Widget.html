@@ -276,7 +276,10 @@
 
         if (orgClass && photoQual) {
           // Signal that the widget is ready for submission
-          JFCustomWidget.sendSubmit({ valid: true });
+          JFCustomWidget.sendSubmit({
+           valid: true,
+           value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+          });
         } else {
           // Ensure the valid state is false if selections are incomplete
           JFCustomWidget.sendSubmit({ valid: false });
@@ -292,21 +295,7 @@
       });
 
       // Submission logic
-      JFCustomWidget.subscribe("submit", function() {
-        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-
-        if (!orgClass || !photoQual) {
-          alert("Please select an option for both questions");
-          JFCustomWidget.sendSubmit({ valid: false });
-        } else {
-          const orgLabel = label;
-          const orgName = matchingInfo;
-          JFCustomWidget.sendSubmit({
-            valid: true,
-            value: `${orgLabel},${orgName},${orgClass},${photoQual}`
-          });
-        }
+      JFCustomWidget.subscribe("submit", function(checkSelections) {
       });
     })
     });
