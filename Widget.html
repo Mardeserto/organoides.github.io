@@ -272,6 +272,7 @@
       // Submission logic
       JFCustomWidget.subscribe("submit", function() {
         const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || "No Selection";
 
         if (orgClass) {
           const orgLabel = label;
