@@ -268,13 +268,12 @@
           }
         });
       });
-
+      const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+      const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+      const orgLabel = label;
+      const orgName = matchingInfo;
       // Submission logic
       JFCustomWidget.subscribe("submit", function() {
-        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-        const orgLabel = label;
-        const orgName = matchingInfo;
         var result = {   
           valid: true,
           value: `${orgLabel},${orgName},${orgClass},${photoQual}`
