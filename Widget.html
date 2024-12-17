@@ -226,13 +226,14 @@
       const rows = csvText.split("\n").map(row => row.split(","));
 
       // Find the information corresponding to the "label" variable
-      let matchingInfo = "Not found";
+      matchingInfo = "Not found";
       rows.forEach(([variable, info]) => {
         if (variable === label) {
           matchingInfo = info;
         }
       });
-
+    })
+      
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
       id: "focus-container",
@@ -288,8 +289,6 @@
             JFCustomWidget.sendSubmit({ valid: false });
           }
         });
-      }
-    })
     });
     
   </script>
