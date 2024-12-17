@@ -205,14 +205,12 @@
 </div>
 
 <script>
-  let label;
-  let matchingInfo;
-  JFCustomWidget.subscribe("ready", function() {
-    // Configuração dos valores a partir das definições do widget no Jotform
-    const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
-    const label = `Organoid_${photoNumber}` ;
+    JFCustomWidget.subscribe("ready", function() {
+      // Configuração dos valores a partir das definições do widget no Jotform
+      const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
+      const label = `Organoid_${photoNumber}` ;
 
-    const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
+      const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
   fetch(csvFilePath)
     .then(response => {
       if (!response.ok) {
@@ -232,8 +230,7 @@
           matchingInfo = info;
         }
       });
-    })
-    
+
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
       id: "focus-container",
@@ -271,18 +268,20 @@
           }
         });
       });
-    });
 
       // Submission logic
       JFCustomWidget.subscribe("submit", function() {
         const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
         const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-          JFCustomWidget.sendSubmit({
+        const orgLabel = label;
+        const orgName = matchingInfo;
+      JFCustomWidget.sendSubmit({
             valid: true,
-            value: `${label},${matchingInfo},${orgClass},${photoQual}`
-            console.log(`${label},${matchingInfo},${orgClass},${photoQual}`)
+            value: `${orgLabel},${orgName},${orgClass},${photoQual}`
           });
       });
+    })
+    });
     
   </script>
 </body>
