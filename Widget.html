@@ -240,7 +240,7 @@
       tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
-      });
+    });
 
       // Função para salvar o estado de zoom
       function saveZoomState() {
@@ -265,23 +265,30 @@
               const previousImage = viewer.world.getItemAt(0);
               viewer.world.removeItem(previousImage);
             }
+            JFCustomWidget.setReady(true);
           }
         });
       });
-      const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-      const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-      const orgLabel = label;
-      const orgName = matchingInfo;
+
       // Submission logic
       JFCustomWidget.subscribe("submit", function() {
-        var result = {   
-          valid: true,
-          value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+
+        if (orgClass && photoQual) {
+          const orgLabel = label;
+          const orgName = matchingInfo;
+          JFCustomWidget.sendSubmit({
+            valid: true,
+            value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+          });
+        } else {
+          alert("Please select an option for both questions");
+          JFCustomWidget.sendSubmit({ valid: false });
         }
-        JFCustomWidget.sendSubmit(result);
       });
     })
-  });
+    });
     
   </script>
 </body>
