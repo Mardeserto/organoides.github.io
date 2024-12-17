@@ -271,20 +271,10 @@
 
       // Submission logic
       JFCustomWidget.subscribe("submit", function() {
-        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-
-        if (orgClass && photoQual) {
-          const orgLabel = label;
-          const orgName = matchingInfo;
           JFCustomWidget.sendSubmit({
             valid: true,
-            value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+            value: `teste`
           });
-        } else {
-          alert("Please select an option for both questions");
-          JFCustomWidget.sendSubmit({ valid: false });
-        }
       });
     })
     });
