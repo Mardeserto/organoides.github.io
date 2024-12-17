@@ -205,6 +205,8 @@
 </div>
 
 <script>
+  let label;
+  let matchingInfo;
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
@@ -224,12 +226,13 @@
       const rows = csvText.split("\n").map(row => row.split(","));
 
       // Find the information corresponding to the "label" variable
-      let matchingInfo = "Not found";
+      matchingInfo = "Not found";
       rows.forEach(([variable, info]) => {
         if (variable === label) {
           matchingInfo = info;
         }
       });
+    })
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
@@ -269,26 +272,26 @@
           }
         });
       });
-
+    });
+      
       // Submission logic
       JFCustomWidget.subscribe("submit", function() {
+        console.log("Submit event triggered");
         const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
         const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+        console.log("orgClass:", orgClass, "photoQual:", photoQual);
 
         if (orgClass && photoQual) {
-          const orgLabel = label;
-          const orgName = matchingInfo;
+          console.log("Submitting with label:", label, "and matchingInfo:", matchingInfo);
           JFCustomWidget.sendSubmit({
             valid: true,
-            value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+            value: `${label},${matchingInfo},${orgClass},${photoQual}`
           });
         } else {
           alert("Please select an option for both questions");
           JFCustomWidget.sendSubmit({ valid: false });
         }
       });
-    })
-    });
     
   </script>
 </body>
