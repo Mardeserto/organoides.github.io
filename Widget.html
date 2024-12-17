@@ -205,6 +205,8 @@
 </div>
 
 <script>
+  let label;
+  let matchingInfo;
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
@@ -276,11 +278,9 @@
   
           if (orgClass && photoQual) {
             for (i = 1; i <= 2; i++) {
-              const orgLabel = label;
-              const orgName = matchingInfo;
               JFCustomWidget.sendSubmit({
                 valid: true,
-                value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+                value: `${label},${matchingInfo},${orgClass},${photoQual}`
               });
             }
           } else {
