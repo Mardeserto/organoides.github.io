@@ -270,12 +270,14 @@
       });
 
       // Submission logic
-      JFCustomWidget.subscribe("submit", function() {
-      });
-          JFCustomWidget.sendSubmit({
+      function sub(){          
+        JFCustomWidget.sendSubmit({
             valid: true,
             value: `teste`
           });
+      }
+      JFCustomWidget.subscribe("submit", function(sub) {
+      });
     })
     });
     
