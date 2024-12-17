@@ -270,13 +270,15 @@
         });
       });
 
-      // Submission logic         
-      JFCustomWidget.subscribe("submit", function() {
-        JFCustomWidget.sendSubmit({
-          valid: true,
-          value: `teste`
+      // Submission logic   
+      JFCustomWidget.onload = function(){
+        JFCustomWidget.subscribe("submit", function() {
+          JFCustomWidget.sendSubmit({
+            valid: true,
+            value: `teste`
+          });
         });
-      });
+      };
     });
     
   </script>
