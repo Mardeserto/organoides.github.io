@@ -230,6 +230,7 @@
           matchingInfo = info;
         }
       });
+    })
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
@@ -269,16 +270,13 @@
         });
       });
 
-      // Submission logic
-      function sub(){          
+      // Submission logic         
+      JFCustomWidget.subscribe("submit", function() {
         JFCustomWidget.sendSubmit({
-            valid: true,
-            value: `teste`
-          });
-      }
-      JFCustomWidget.subscribe("submit", function(sub) {
+          valid: true,
+          value: `teste`
+        });
       });
-    })
     });
     
   </script>
