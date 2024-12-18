@@ -230,7 +230,6 @@
           matchingInfo = info;
         }
       });
-    })
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
@@ -270,15 +269,26 @@
         });
       });
 
-      // Submission logic   
-      window.onload = function(){
-        JFCustomWidget.subscribe("submit", function() {
-          JFCustomWidget.sendSubmit({
-            valid: true,
-            value: `teste`
-          });
-        });
-      };
+      // Submission logic
+    JFCustomWidget.subscribe("submit", function() {
+      const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+      const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+    
+      if (!orgClass || !photoQual) {
+        alert("Please select an option for both questions");
+        // Do not call `JFCustomWidget.sendSubmit` with `{ valid: false }` here
+        return;
+      }
+    
+      // If both fields are valid
+      const orgLabel = label;
+      const orgName = matchingInfo;
+      JFCustomWidget.sendSubmit({
+        valid: true,
+        value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+      });
+    });
+    })
     });
     
   </script>
