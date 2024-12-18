@@ -183,11 +183,14 @@
 <script>
   let label;
   let matchingInfo = "Not found";
+  let params;
+  let organoideNumber;
   window.onload = function() {
-      const params = new URLSearchParams(window.location.search);
-      const organoideNumber = params.get('organoid') || 0;
+      params = new URLSearchParams(window.location.search);
+      organoideNumber = params.get('organoid') || 0;
       label = `Organoid_${organoideNumber}` ;
-      
+  };
+  window.onload = async function(){
       const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
       try {
         const response = await fetch(csvFilePath);
