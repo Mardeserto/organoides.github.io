@@ -182,7 +182,7 @@
 </div>  
 <script>
   let label;
-  let matchingInfo;
+  let matchingInfo = "Not found";
   window.onload = function() {
       const params = new URLSearchParams(window.location.search);
       const organoideNumber = params.get('organoid') || 0;
@@ -202,7 +202,6 @@
       const rows = csvText.split("\n").map(row => row.split(","));
 
       // Find the information corresponding to the "label" variable
-      matchingInfo = "Not found";
       rows.forEach(([variable, info]) => {
         if (variable === label) {
           matchingInfo = info;
