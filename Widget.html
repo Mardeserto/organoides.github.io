@@ -205,33 +205,31 @@
 </div>
 
 <script>
-  const label;
-  const matchingInfo;
-  JFCustomWidget.subscribe("ready", function() {
-    // Configuração dos valores a partir das definições do widget no Jotform
-    const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
-    label = `Organoid_${photoNumber}` ;
-    const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
-    fetch(csvFilePath)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
+    JFCustomWidget.subscribe("ready", function() {
+      // Configuração dos valores a partir das definições do widget no Jotform
+      const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
+      const label = `Organoid_${photoNumber}` ;
+
+      const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
+  fetch(csvFilePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then(csvText => {
+
+      // Parse CSV text into rows and cells
+      const rows = csvText.split("\n").map(row => row.split(","));
+
+      // Find the information corresponding to the "label" variable
+      let matchingInfo = "Not found";
+      rows.forEach(([variable, info]) => {
+        if (variable === label) {
+          matchingInfo = info;
         }
-        return response.text();
-      })
-      .then(csvText => {
-  
-        // Parse CSV text into rows and cells
-        const rows = csvText.split("\n").map(row => row.split(","));
-  
-        // Find the information corresponding to the "label" variable
-        matchingInfo = "Not found";
-        rows.forEach(([variable, info]) => {
-          if (variable === label) {
-            matchingInfo = info;
-          }
-        });
-       })
+      });
 
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
@@ -242,7 +240,7 @@
       tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
-      });
+    });
 
       // Função para salvar o estado de zoom
       function saveZoomState() {
@@ -267,9 +265,9 @@
               const previousImage = viewer.world.getItemAt(0);
               viewer.world.removeItem(previousImage);
             }
-           }
-         });
-       });
+          }
+        });
+      });
 
       // Submission logic
       JFCustomWidget.subscribe("submit", function() {
@@ -288,6 +286,7 @@
           JFCustomWidget.sendSubmit({ valid: false });
         }
       });
+    })
     });
     
   </script>
