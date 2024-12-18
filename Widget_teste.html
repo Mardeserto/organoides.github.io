@@ -181,32 +181,32 @@
     </div>
 </div>  
 <script>
-  let label;
-  let matchingInfo = "Not found";
-  let params;
-  let organoideNumber;
-  window.onload = function() {
-      params = new URLSearchParams(window.location.search);
-      organoideNumber = params.get('organoid') || 0;
-      label = `Organoid_${organoideNumber}` ;
-  };
-  window.onload = async function(){
-      const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
-      try {
-        const response = await fetch(csvFilePath);
+ JFCustomWidget.subscribe("ready", function() {
+    // Configuração dos valores a partir das definições do widget no Jotform
+    const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
+    const label = `Organoid_${photoNumber}` ;
+    const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
+    
+    fetch(csvFilePath)
+      .then(response => {
         if (!response.ok) {
-            throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
+          throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
         }
-        const csvText = await response.text();
-
+        return response.text();
+      })
+      .then(csvText => {
+  
         // Parse CSV text into rows and cells
         const rows = csvText.split("\n").map(row => row.split(","));
-
+  
         // Find the information corresponding to the "label" variable
-        const match = rows.find(([variable]) => variable === label);
-        const matchingInfo = match ? match[1] : "Not found";
-      }
-
+        matchingInfo = "Not found";
+        rows.forEach(([variable, info]) => {
+          if (variable === label) {
+            matchingInfo = info;
+          }
+        });
+       })
       //Update matchingInfo variable on text 
       document.getElementById("matching-info").textContent = matchingInfo;
       document.getElementById('label').textContent = label;
