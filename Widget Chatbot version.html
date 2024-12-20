@@ -204,91 +204,102 @@
     </div>
 </div>
 
-<script>
+  <script>
+    (function() {
+    let widgetData = {
+      label: '',
+      matchingInfo: ''
+    };
+  
     JFCustomWidget.subscribe("ready", function() {
-      // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
-      const label = `Organoid_${photoNumber}` ;
-
-      const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
-  fetch(csvFilePath)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
-      }
-      return response.text();
-    })
-    .then(csvText => {
-
-      // Parse CSV text into rows and cells
-      const rows = csvText.split("\n").map(row => row.split(","));
-
-      // Find the information corresponding to the "label" variable
-      let matchingInfo = "Not found";
-      rows.forEach(([variable, info]) => {
-        if (variable === label) {
-          matchingInfo = info;
-        }
-      });
-
-      // Inicializa o OpenSeadragon
-      var viewer = OpenSeadragon({
-      id: "focus-container",
-      prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
-      showFullPageControl: false,
-      showNavigator: true,
-      tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
-      blendTime: 0.2, // Controle de transição suave (0.2 segundos)
-      immediateRender: true
-    });
-
-      // Função para salvar o estado de zoom
-      function saveZoomState() {
-        return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
-      }
-
-      // Função para restaurar o estado de zoom
-      function restoreZoomState(state) {
-        viewer.viewport.zoomTo(state.zoom, state.center);
-      }
-
-      // Monitora o slider para mudanças de foco
-      document.getElementById("slider").addEventListener('input', function() {
-        const focusLevel = this.value;
-        const zoomState = saveZoomState();
-        viewer.addTiledImage({
-          tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
-          success: function(event) {
-            const tiledImage = event.item;
-            restoreZoomState(zoomState);
-            if (viewer.world.getItemCount() > 1) {
-              const previousImage = viewer.world.getItemAt(0);
-              viewer.world.removeItem(previousImage);
-            }
+      widgetData.label = `Organoid_${photoNumber}`;
+  
+      const csvFilePath = "20241203_Organoid_Names.csv";
+      fetch(csvFilePath)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
           }
-        });
-      });
-
-      // Submission logic
-      JFCustomWidget.subscribe("submit", function() {
-        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-
-        if (orgClass && photoQual) {
-          const orgLabel = label;
-          const orgName = matchingInfo;
-          JFCustomWidget.sendSubmit({
-            valid: true,
-            value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+          return response.text();
+        })
+        .then(csvText => {
+          const rows = csvText.split("\n").map(row => row.split(","));
+          
+          widgetData.matchingInfo = "Not found";
+          rows.forEach(([variable, info]) => {
+            if (variable === widgetData.label) {
+              widgetData.matchingInfo = info;
+            }
           });
-        } else {
-          alert("Please select an option for both questions");
-          JFCustomWidget.sendSubmit({ valid: false });
-        }
+  
+          console.log("Initialization complete. Label:", widgetData.label, "MatchingInfo:", widgetData.matchingInfo);
+  
+          // Only set the widget as ready if CSV is successfully loaded and parsed
+          JFCustomWidget.setReady(true);
+        })
+        .catch(error => {
+          console.error("Error loading CSV:", error);
+          // Don't set the widget as ready if there's an error
+          alert("Error loading necessary data. Please refresh the page or contact support.");
+        });
+            // Inicializa o OpenSeadragon
+        var viewer = OpenSeadragon({
+        id: "focus-container",
+        prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
+        showFullPageControl: false,
+        showNavigator: true,
+        tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
+        blendTime: 0.2, // Controle de transição suave (0.2 segundos)
+        immediateRender: true
       });
-    })
+  
+        // Função para salvar o estado de zoom
+        function saveZoomState() {
+          return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
+        }
+  
+        // Função para restaurar o estado de zoom
+        function restoreZoomState(state) {
+          viewer.viewport.zoomTo(state.zoom, state.center);
+        }
+  
+        // Monitora o slider para mudanças de foco
+        document.getElementById("slider").addEventListener('input', function() {
+          const focusLevel = this.value;
+          const zoomState = saveZoomState();
+          viewer.addTiledImage({
+            tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
+            success: function(event) {
+              const tiledImage = event.item;
+              restoreZoomState(zoomState);
+              if (viewer.world.getItemCount() > 1) {
+                const previousImage = viewer.world.getItemAt(0);
+                viewer.world.removeItem(previousImage);
+              }
+            }
+          });
+        });
     });
-    
+  
+    JFCustomWidget.subscribe("submit", function() {
+      console.log("Submit event triggered");
+      const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+      const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+      console.log("orgClass:", orgClass, "photoQual:", photoQual);
+  
+      if (orgClass && photoQual) {
+        console.log("Submitting with label:", widgetData.label, "and matchingInfo:", widgetData.matchingInfo);
+        JFCustomWidget.sendSubmit({
+          valid: true,
+          value: `${widgetData.label},${widgetData.matchingInfo},${orgClass},${photoQual}`
+        });
+      } else {
+        alert("Please select an option for both questions");
+        JFCustomWidget.sendSubmit({ valid: false });
+      }
+    });
+  })();
   </script>
 </body>
 </html>

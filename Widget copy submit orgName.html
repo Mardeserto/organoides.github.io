@@ -145,27 +145,14 @@
     #slider::-ms-tooltip { 
         display: none;
     }
-    .checkbox-org-container {
+    .checkbox-container {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         margin-top: -65px;
         margin-left: 10px;
-        font-size: 20px;
     }
-    .checkbox-org-label {
-        margin-top: 8px;
-        font-size: 18px;
-    }
-    .checkbox-photo-container {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        margin-top: 40px;
-        margin-left: 10px;
-        font-size: 20px;
-    }
-    .checkbox-photo-label {
+    .checkbox-label {
         margin-top: 8px;
         font-size: 18px;
     }
@@ -174,7 +161,8 @@
 </head>
 <body>
 <div id="main">
-  <h3 id="label">Organoid Classification Section</h3>
+  <h3 id="label"></h3>
+  <p id="matching-info"> Verificação.</p>
 
   <!-- Inclui e ajusta o slider de ajuste de foco -->
   <div id="focus-container"></div>
@@ -183,32 +171,20 @@
   <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
 
   <!-- Inclui as caixas de seleção-->
-    <div class="checkbox-org-container">Classify the organoid above:
-      <label class="checkbox-org-label">
-        <input type="radio" name="selection-org" value="Acceptable"> Acceptable
+    <div class="checkbox-container">Classify this organoid
+      <label class="checkbox-label">
+        <input type="radio" name="selection" value="Acceptable"> Acceptable
       </label>
-      <label class="checkbox-org-label">
-        <input type="radio" name="selection-org" value="Not Acceptable"> Not acceptable
-      </label>
-    </div>
-    <div class="checkbox-photo-container">How would you rate the image quality?
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Good"> Good
-      </label>
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Reasonable"> Reasonable
-      </label>
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Bad"> Bad
+      <label class="checkbox-label">
+        <input type="radio" name="selection" value="Not Acceptable"> Not acceptable
       </label>
     </div>
-</div>
-
+</div>  
 <script>
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
-      const label = `Organoid_${photoNumber}` ;
+      const label = JFCustomWidget.getWidgetSetting('QuestionLabel') || `Organoid_${photoNumber}` ;
 
       const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
   fetch(csvFilePath)
@@ -231,6 +207,11 @@
         }
       });
 
+      //Update matchingInfo variable on text 
+      document.getElementById("matching-info").textContent = matchingInfo;
+      document.getElementById('label').textContent = label;
+
+    })
       // Inicializa o OpenSeadragon
       var viewer = OpenSeadragon({
       id: "focus-container",
@@ -269,26 +250,14 @@
         });
       });
 
-      // Submission logic
+      // Envio de dados para o Jotform
       JFCustomWidget.subscribe("submit", function() {
-        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-
-        if (orgClass && photoQual) {
-          const orgLabel = label;
-          const orgName = matchingInfo;
-          JFCustomWidget.sendSubmit({
-            valid: true,
-            value: `${orgLabel},${orgName},${orgClass},${photoQual}`
-          });
-        } else {
-          alert("Please select an option for both questions");
-          JFCustomWidget.sendSubmit({ valid: false });
-        }
+        const selectedOption = document.querySelector('input[name="selection"]:checked')?.value || "No selection";
+        const orgLabel = label;
+        const orgName = matchingInfo;
+        JFCustomWidget.sendSubmit({ valid: true, value: `${orgLabel},${orgName},${selectedOption}`});
       });
-    })
     });
-    
   </script>
 </body>
 </html>
