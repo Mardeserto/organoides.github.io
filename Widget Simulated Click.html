@@ -270,21 +270,44 @@
       });
 
       // Submission logic
-      JFCustomWidget.subscribe("submit", function() {
+     function triggerSubmit() {
+      const submitEvent = new Event("submit");
+      document.dispatchEvent(submitEvent);
+     } 
+      document.addEventListener("submit", function () {
+        JFCustomWidget.subscribe("submit", function() {
         const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
         const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-
+      
         if (orgClass && photoQual) {
-          const orgLabel = label;
-          const orgName = matchingInfo;
+          const orgLabel = label; // Assuming `label` is defined in your outer scope
+          const orgName = matchingInfo; // Assuming `matchingInfo` is defined in your outer scope
           JFCustomWidget.sendSubmit({
             valid: true,
-            value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+            value: `${orgLabel},${orgName},${orgClass},${photoQual}`,
           });
         } else {
           alert("Please select an option for both questions");
           JFCustomWidget.sendSubmit({ valid: false });
         }
+        });
+      });
+      function isValidSelection() {
+        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value;
+        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value;
+        return orgClass && photoQual;
+      }
+      
+      // Attach listeners to the checkboxes
+      const orgClassInput = document.querySelectorAll('input[name="selection-org"]');
+      const photoQualInput = document.querySelectorAll('input[name="selection-photo"]');
+      
+      [...orgClassInput, ...photoQualInput].forEach(input => {
+        input.addEventListener("change", () => {
+          if (isValidSelection()) {
+            triggerSubmit();
+          }
+        });
       });
     })
     });
