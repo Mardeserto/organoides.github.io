@@ -275,7 +275,6 @@
       document.dispatchEvent(submitEvent);
      } 
       document.addEventListener("submit", function () {
-        JFCustomWidget.subscribe("submit", function() {
         const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
         const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
       
@@ -290,7 +289,6 @@
           alert("Please select an option for both questions");
           JFCustomWidget.sendSubmit({ valid: false });
         }
-        });
       });
       function isValidSelection() {
         const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value;
