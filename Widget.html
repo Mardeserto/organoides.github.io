@@ -269,6 +269,19 @@
         });
       });
 
+      // Listen for changes in the radio buttons to validate the required fields
+      document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
+        input.addEventListener('change', function() {
+          const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+          const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+
+          // Update widget validity state as soon as fields are valid
+          if (orgClass && photoQual) {
+            JFCustomWidget.sendSubmit({ valid: true });
+          }
+        });
+      });
+
       // Submission logic
       JFCustomWidget.subscribe("submit", function() {
         const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
