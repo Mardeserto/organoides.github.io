@@ -227,8 +227,9 @@
 </div>
 
 <script>
-  JFCustomWidget.subscribe("ready", function() {
-    const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
+  window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const photoNumber = params.get('organoid') || 0;
     const label = `Organoid_${photoNumber}`;
     const csvFilePath = "20241203_Organoid_Names.csv";
 
@@ -315,7 +316,7 @@
           }
         });
       });
-  });
+  };
 </script>
 </body>
 </html>
