@@ -202,121 +202,211 @@
   </div>
 
   <!-- Inclui as caixas de seleção-->
-  <div class="checkbox-org-container">Classify the organoid above:
-    <label class="checkbox-org-label">
-      <input type="radio" name="selection-org" value="Acceptable"> Teste 2
-    </label>
-    <label class="checkbox-org-label">
-      <input type="radio" name="selection-org" value="Not Acceptable"> Not acceptable
-    </label>
-    <label class="checkbox-org-label">
-      <input type="radio" name="selection-org" value="Not Loaded"> Image did not load
-    </label>
-  </div>
-  <div class="checkbox-photo-container">How would you rate the image quality?
-    <label class="checkbox-photo-label">
-      <input type="radio" name="selection-photo" value="Good"> Good
-    </label>
-    <label class="checkbox-photo-label">
-      <input type="radio" name="selection-photo" value="Reasonable"> Reasonable
-    </label>
-    <label class="checkbox-photo-label">
-      <input type="radio" name="selection-photo" value="Bad"> Bad
-    </label>
-  </div>
+    <div class="checkbox-org-container">Classify the organoid above:
+      <label class="checkbox-org-label">
+        <input type="radio" name="selection-org" value="Acceptable"> Acceptable
+      </label>
+      <label class="checkbox-org-label">
+        <input type="radio" name="selection-org" value="Not Acceptable"> Not acceptable
+      </label>
+      <label class="checkbox-org-label">
+        <input type="radio" name="selection-org" value="Not Loaded"> Image did not load
+      </label>
+    </div>
+    <div class="checkbox-photo-container">How would you rate the image quality?
+      <label class="checkbox-photo-label">
+        <input type="radio" name="selection-photo" value="Good"> Good
+      </label>
+      <label class="checkbox-photo-label">
+        <input type="radio" name="selection-photo" value="Reasonable"> Reasonable
+      </label>
+      <label class="checkbox-photo-label">
+        <input type="radio" name="selection-photo" value="Bad"> Bad
+      </label>
+    </div>
 </div>
 
 <script>
-  window.onload = function() {
-    const params = new URLSearchParams(window.location.search);
-    const photoNumber = params.get('organoid') || 0;
-    const label = `Organoid_${photoNumber}`;
-    const csvFilePath = "20241203_Organoid_Names.csv";
+    JFCustomWidget.subscribe("ready", function() {
+      // Configuração dos valores a partir das definições do widget no Jotform
+      const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
+      const label = `Organoid_${photoNumber}` ;
 
-    fetch(csvFilePath)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
+      const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
+  fetch(csvFilePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then(csvText => {
+
+      // Parse CSV text into rows and cells
+      const rows = csvText.split("\n").map(row => row.split(","));
+
+      // Find the information corresponding to the "label" variable
+      let matchingInfo = "Not found";
+      rows.forEach(([variable, info]) => {
+        if (variable === label) {
+          matchingInfo = info;
         }
-        return response.text();
-      })
-      .then(csvText => {
-        const rows = csvText.split("\n").map(row => row.split(","));
-        let matchingInfo = "Not found";
-        rows.forEach(([variable, info]) => {
-          if (variable === label) {
-            matchingInfo = info;
-          }
-        });
+      });
 
-        function initializeViewer(containerId, sliderId, photoNumber) {
-          const viewer = OpenSeadragon({
-            id: containerId,
-            prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
-            showFullPageControl: false,
-            showNavigator: true,
-            tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
-            blendTime: 0.2,
-            immediateRender: true
-          });
+      // Inicializa o OpenSeadragon
+      var viewer1 = OpenSeadragon({
+      id: "focus-container1",
+      prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
+      showFullPageControl: false,
+      showNavigator: true,
+      tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
+      blendTime: 0.2, // Controle de transição suave (0.2 segundos)
+      immediateRender: true
+    });
 
-          function saveZoomState() {
-            return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
-          }
+      // Função para salvar o estado de zoom
+      function saveZoomState() {
+        return { zoom: viewer1.viewport.getZoom(), center: viewer1.viewport.getCenter() };
+      }
 
-          function restoreZoomState(state) {
-            viewer.viewport.zoomTo(state.zoom, state.center);
-          }
+      // Função para restaurar o estado de zoom
+      function restoreZoomState(state) {
+        viewer1.viewport.zoomTo(state.zoom, state.center);
+      }
 
-          document.getElementById(sliderId).addEventListener('input', function() {
-            const focusLevel = this.value;
-            const zoomState = saveZoomState();
-            viewer.addTiledImage({
-              tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
-              success: function(event) {
-                const tiledImage = event.item;
-                restoreZoomState(zoomState);
-                if (viewer.world.getItemCount() > 1) {
-                  const previousImage = viewer.world.getItemAt(0);
-                  viewer.world.removeItem(previousImage);
-                }
-              }
-            });
-          });
-        }
-
-        initializeViewer('focus-container1', 'slider1', photoNumber);
-        initializeViewer('focus-container2', 'slider2', photoNumber);
-        initializeViewer('focus-container3', 'slider3', photoNumber);
-
-        document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
-          input.addEventListener('change', function() {
-            const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-            const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-            if (orgClass && photoQual) {
-              JFCustomWidget.sendSubmit({
-                valid: true,
-                value: `${label},${matchingInfo},${orgClass},${photoQual}`
-              });
+      // Monitora o slider para mudanças de foco
+      document.getElementById("slider1").addEventListener('input', function() {
+        const focusLevel = this.value;
+        const zoomState = saveZoomState();
+        viewer1.addTiledImage({
+          tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
+          success: function(event) {
+            const tiledImage = event.item;
+            restoreZoomState(zoomState);
+            if (viewer1.world.getItemCount() > 1) {
+              const previousImage = viewer1.world.getItemAt(0);
+              viewer1.world.removeItem(previousImage);
             }
-          });
-        });
-
-        JFCustomWidget.subscribe("submit", function() {
-          const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-          const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-          if (orgClass && photoQual) {
-            JFCustomWidget.sendSubmit({
-              valid: true,
-              value: `${label},${matchingInfo},${orgClass},${photoQual}`
-            });
-          } else {
-            alert("Please select an option for both questions");
-            JFCustomWidget.sendSubmit({ valid: false });
           }
         });
       });
-  };
-</script>
+
+      // Inicializa o OpenSeadragon
+      var viewer2 = OpenSeadragon({
+      id: "focus-container2",
+      prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
+      showFullPageControl: false,
+      showNavigator: true,
+      tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
+      blendTime: 0.2, // Controle de transição suave (0.2 segundos)
+      immediateRender: true
+    });
+
+      // Função para salvar o estado de zoom
+      function saveZoomState() {
+        return { zoom: viewer2.viewport.getZoom(), center: viewer2.viewport.getCenter() };
+      }
+
+      // Função para restaurar o estado de zoom
+      function restoreZoomState(state) {
+        viewer2.viewport.zoomTo(state.zoom, state.center);
+      }
+
+      // Monitora o slider para mudanças de foco
+      document.getElementById("slider2").addEventListener('input', function() {
+        const focusLevel = this.value;
+        const zoomState = saveZoomState();
+        viewer2.addTiledImage({
+          tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
+          success: function(event) {
+            const tiledImage = event.item;
+            restoreZoomState(zoomState);
+            if (viewer2.world.getItemCount() > 1) {
+              const previousImage = viewer2.world.getItemAt(0);
+              viewer2.world.removeItem(previousImage);
+            }
+          }
+        });
+      });
+
+      // Inicializa o OpenSeadragon
+      var viewer3 = OpenSeadragon({
+      id: "focus-container3",
+      prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
+      showFullPageControl: false,
+      showNavigator: true,
+      tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
+      blendTime: 0.2, // Controle de transição suave (0.2 segundos)
+      immediateRender: true
+    });
+
+      // Função para salvar o estado de zoom
+      function saveZoomState() {
+        return { zoom: viewer3.viewport.getZoom(), center: viewer3.viewport.getCenter() };
+      }
+
+      // Função para restaurar o estado de zoom
+      function restoreZoomState(state) {
+        viewer3.viewport.zoomTo(state.zoom, state.center);
+      }
+
+      // Monitora o slider para mudanças de foco
+      document.getElementById("slider3").addEventListener('input', function() {
+        const focusLevel = this.value;
+        const zoomState = saveZoomState();
+        viewer3.addTiledImage({
+          tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
+          success: function(event) {
+            const tiledImage = event.item;
+            restoreZoomState(zoomState);
+            if (viewer3.world.getItemCount() > 1) {
+              const previousImage = viewer3.world.getItemAt(0);
+              viewer3.world.removeItem(previousImage);
+            }
+          }
+        });
+      });
+
+      // Listen for changes in the radio buttons to validate the required fields
+      document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
+        input.addEventListener('change', function() {
+          const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+          const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+
+          // Update widget validity state as soon as fields are valid
+          if (orgClass && photoQual) {
+            const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+            const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+            const orgLabel = label;
+            const orgName = matchingInfo;
+            JFCustomWidget.sendSubmit({
+               valid: true,
+               value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+            });
+          }
+        });
+      });
+
+      // Submission logic
+      JFCustomWidget.subscribe("submit", function() {
+        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+
+        if (orgClass && photoQual) {
+          const orgLabel = label;
+          const orgName = matchingInfo;
+          JFCustomWidget.sendSubmit({
+            valid: true,
+            value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+          });
+        } else {
+          alert("Please select an option for both questions");
+          JFCustomWidget.sendSubmit({ valid: false });
+        }
+      });
+    })
+    });
+    
+  </script>
 </body>
 </html>
