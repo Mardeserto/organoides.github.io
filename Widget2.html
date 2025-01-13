@@ -36,13 +36,6 @@
       cursor: grabbing;
     }
     
-    .container {
-      width: 640px;
-      height: 480px;
-      position: relative;
-      top: 5px;
-      background-color: rgb(241, 8, 8);
-    }
 
     .focus-container {
       width: 640px;
@@ -52,28 +45,22 @@
       background-color: black;
     }
 
-    #focus-container1 {
-      width: 640px;
-      height: 480px;
+    #container1 {
       position: relative;
       top: 5px;
       background-color: rgb(7, 30, 241);
     }
 
-    #focus-container2 {
-      width: 640px;
-      height: 480px;
+    #container2 {
       position: relative;
-      top: 25px;
+      top: 5px;
+      right: -800px;
       background-color: rgb(195, 247, 8);
     }
 
-    #focus-container3 {
-      width: 640px;
-      height: 480px;
+    #container3 {
       position: relative;
-      top: 50px;
-      right: 50px;
+      top: 500px;
       background-color: rgb(10, 248, 69);
     }
 
@@ -101,7 +88,6 @@
       color: #333;
       position: relative;
       width: 470px;
-      transform: rotate(90deg);
       right: -458px;
       top: -312px;
     }
@@ -111,8 +97,6 @@
       width: 470px;
       height: 10px;
       position: relative;
-      transform: rotate(270deg);
-      transform-origin: top left;
       right: -550px;
       top: -86px;
       margin: auto;
@@ -210,27 +194,27 @@
   <h3 id="label">Organoid Classification Section</h3>
 
   <!-- Image and Slider Containers -->
-  <div class="container">
+  <div id="container1">
     <div id="focus-container1" class="focus-container"></div>
     <div class="slider-container">
       <div class="slider-label">Focus Adjustment 1</div>
-      <input type="range" id="slider1" class="slider" min="1" max="5" value="1">
+      <input type="range" id="slider1" class="slider draggable" min="1" max="5" value="1">
     </div>
   </div>
 
-  <div class="container">
+  <div id="container2">
     <div id="focus-container2" class="focus-container"></div>
     <div class="slider-container">
       <div class="slider-label">Focus Adjustment 2</div>
-      <input type="range" id="slider2" class="slider" min="1" max="5" value="1">
+      <input type="range" id="slider2" class="slider draggable" min="1" max="5" value="1">
     </div>
   </div>
 
-  <div class="container">
+  <div id="container3">
     <div id="focus-container3" class="focus-container"></div>
     <div class="slider-container">
       <div class="slider-label">Focus Adjustment 3</div>
-      <input type="range" id="slider3" class="slider" min="1" max="5" value="1">
+      <input type="range" id="slider3" class="slider draggable" min="1" max="5" value="1">
     </div>
   </div>
 
