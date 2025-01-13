@@ -12,65 +12,164 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
 
   <style>
-    html, body {
-      width: 100%;
-      height: 100%;
+    html {
+      width: 710px;
+      height: 485px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
       margin: 0;
       padding: 0;
-      background-color: #f4f4f4;
-      font-family: Arial, sans-serif;
+      width: 710px;
+      height: 485px;
     }
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
+    .draggable {
+      cursor: move; 
+      cursor: url(/organoides.github.io/images/grab.cur);
+      cursor: grab;
     }
-    .focus-container {
+
+    .draggable:active {
+      cursor: url(/organoides.github.io/images/grabbing.cur);
+      cursor: grabbing;
+    }
+    
+    #focus-container {
       width: 640px;
       height: 480px;
+      position: relative;
+      top: 5px;
       background-color: black;
-      margin-bottom: 10px;
     }
-    .slider-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 470px;
-      margin-bottom: 20px;
+
+    #slider-container {
+      position: relative;
+      display: inline-block;
+      background-color: #e0e0e0;
+      background-image: url(/organoides.github.io/images/ruler_2.png);
+      padding: 20px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 440px;
+      height: 13px;
+      transform: rotate(90deg);
+      right: -327px;
+      top: -263px;
+
     }
-    .slider-label {
+
+    #slider-label {
+      font-family: Helvetica, sans-serif;
       font-size: 18px;
       font-weight: bold;
       color: #333;
-      margin-bottom: 10px;
+      position: relative;
+      width: 470px;
+      transform: rotate(90deg);
+      right: -458px;
+      top: -312px;
     }
-    .slider {
+
+    #slider {
       -webkit-appearance: none;
-      width: 100%;
+      width: 470px;
       height: 10px;
+      position: relative;
+      transform: rotate(270deg);
+      transform-origin: top left;
+      right: -550px;
+      top: -86px;
+      margin: auto;
+    }
+
+    #slider::-webkit-slider-runnable-track {
       background: #b9cff7;
+      height: 10px;
       border-radius: 5px;
-      outline: none;
-      opacity: 0.7;
-      transition: opacity .15s ease-in-out;
     }
-    .slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 19px;
-      height: 19px;
-      background-color: #4CAF50;
-      border-radius: 50%;
-      cursor: pointer;
+
+    #slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 19px;
+        height: 19px;
+        background-image: url(/organoides.github.io/images/button2.png);
+        border-radius: 50%;
+        position: relative;
+        top: -5px;
     }
-    .slider::-moz-range-thumb {
-      width: 19px;
-      height: 19px;
-      background-color: #4CAF50;
-      border-radius: 50%;
-      cursor: pointer;
+
+    #slider::-moz-range-track {
+        background: #b9cff7;
+        height: 10px;
+        border-radius: 5px;
     }
+
+    #slider::-moz-range-thumb {
+        height: 19px;
+        width: 19px;
+        background-image: url(/organoides.github.io/images/button2.png);
+        border-radius: 50%;
+        position: relative;
+        top: -5px;
+    }
+
+    #slider::-ms-thumb { 
+        background: transparent;
+        height: 19px;
+        width: 19px;
+        background-image: url(/organoides.github.io/images/button2.png);
+        border-radius: 50%;
+        position: relative;
+        top: -5px;
+    }
+
+    #slider::-ms-ticks-after { 
+        display: none; 
+    }
+
+    #slider::-ms-ticks-before { 
+        display: none; 
+    }
+
+    #slider::-ms-track { 
+        background: #b9cff7;
+        color: transparent;
+        height: 10px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    #slider::-ms-tooltip { 
+        display: none;
+    }
+    .checkbox-org-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: -65px;
+        margin-left: 10px;
+        font-size: 20px;
+    }
+    .checkbox-org-label {
+        margin-top: 8px;
+        font-size: 18px;
+    }
+    .checkbox-photo-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 40px;
+        margin-left: 10px;
+        font-size: 20px;
+    }
+    .checkbox-photo-label {
+        margin-top: 8px;
+        font-size: 18px;
+    }
+
   </style>
 </head>
 <body>
@@ -103,53 +202,58 @@
   </div>
 
   <!-- Inclui as caixas de seleção-->
-  <div class="checkbox-org-container">Classify the organoid above:
-    <label class="checkbox-org-label">
-      <input type="radio" name="selection-org" value="Acceptable"> Acceptable
-    </label>
-    <label class="checkbox-org-label">
-      <input type="radio" name="selection-org" value="Not Acceptable"> Not acceptable
-    </label>
-    <label class="checkbox-org-label">
-      <input type="radio" name="selection-org" value="Not Loaded"> Image did not load
-    </label>
-  </div>
-  <div class="checkbox-photo-container">How would you rate the image quality?
-    <label class="checkbox-photo-label">
-      <input type="radio" name="selection-photo" value="Good"> Good
-    </label>
-    <label class="checkbox-photo-label">
-      <input type="radio" name="selection-photo" value="Reasonable"> Reasonable
-    </label>
-    <label class="checkbox-photo-label">
-      <input type="radio" name="selection-photo" value="Bad"> Bad
-    </label>
-  </div>
+    <div class="checkbox-org-container">Classify the organoid above:
+      <label class="checkbox-org-label">
+        <input type="radio" name="selection-org" value="Acceptable"> Acceptable
+      </label>
+      <label class="checkbox-org-label">
+        <input type="radio" name="selection-org" value="Not Acceptable"> Not acceptable
+      </label>
+      <label class="checkbox-org-label">
+        <input type="radio" name="selection-org" value="Not Loaded"> Image did not load
+      </label>
+    </div>
+    <div class="checkbox-photo-container">How would you rate the image quality?
+      <label class="checkbox-photo-label">
+        <input type="radio" name="selection-photo" value="Good"> Good
+      </label>
+      <label class="checkbox-photo-label">
+        <input type="radio" name="selection-photo" value="Reasonable"> Reasonable
+      </label>
+      <label class="checkbox-photo-label">
+        <input type="radio" name="selection-photo" value="Bad"> Bad
+      </label>
+    </div>
 </div>
 
 <script>
-  JFCustomWidget.subscribe("ready", function() {
-    const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
-    const label = `Organoid_${photoNumber}`;
-    const csvFilePath = "20241203_Organoid_Names.csv";
+    JFCustomWidget.subscribe("ready", function() {
+      // Configuração dos valores a partir das definições do widget no Jotform
+      const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
+      const label = `Organoid_${photoNumber}` ;
 
-    fetch(csvFilePath)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
+      const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
+  fetch(csvFilePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then(csvText => {
+
+      // Parse CSV text into rows and cells
+      const rows = csvText.split("\n").map(row => row.split(","));
+
+      // Find the information corresponding to the "label" variable
+      let matchingInfo = "Not found";
+      rows.forEach(([variable, info]) => {
+        if (variable === label) {
+          matchingInfo = info;
         }
-        return response.text();
-      })
-      .then(csvText => {
-        const rows = csvText.split("\n").map(row => row.split(","));
-        let matchingInfo = "Not found";
-        rows.forEach(([variable, info]) => {
-          if (variable === label) {
-            matchingInfo = info;
-          }
-        });
+      });
 
-        function initializeViewer(containerId, sliderId, photoNumber) {
+      function initializeViewer(containerId, sliderId, photoNumber) {
           const viewer = OpenSeadragon({
             id: containerId,
             prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
@@ -189,34 +293,46 @@
         initializeViewer('focus-container2', 'slider2', photoNumber);
         initializeViewer('focus-container3', 'slider3', photoNumber);
 
-        document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
-          input.addEventListener('change', function() {
-            const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-            const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-            if (orgClass && photoQual) {
-              JFCustomWidget.sendSubmit({
-                valid: true,
-                value: `${label},${matchingInfo},${orgClass},${photoQual}`
-              });
-            }
-          });
-        });
-
-        JFCustomWidget.subscribe("submit", function() {
+      // Listen for changes in the radio buttons to validate the required fields
+      document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
+        input.addEventListener('change', function() {
           const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
           const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+
+          // Update widget validity state as soon as fields are valid
           if (orgClass && photoQual) {
+            const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+            const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+            const orgLabel = label;
+            const orgName = matchingInfo;
             JFCustomWidget.sendSubmit({
-              valid: true,
-              value: `${label},${matchingInfo},${orgClass},${photoQual}`
+               valid: true,
+               value: `${orgLabel},${orgName},${orgClass},${photoQual}`
             });
-          } else {
-            alert("Please select an option for both questions");
-            JFCustomWidget.sendSubmit({ valid: false });
           }
         });
       });
-  });
-</script>
+
+      // Submission logic
+      JFCustomWidget.subscribe("submit", function() {
+        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+
+        if (orgClass && photoQual) {
+          const orgLabel = label;
+          const orgName = matchingInfo;
+          JFCustomWidget.sendSubmit({
+            valid: true,
+            value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+          });
+        } else {
+          alert("Please select an option for both questions");
+          JFCustomWidget.sendSubmit({ valid: false });
+        }
+      });
+    })
+    });
+    
+  </script>
 </body>
 </html>
