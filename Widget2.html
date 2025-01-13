@@ -202,58 +202,55 @@
   </div>
 
   <!-- Inclui as caixas de seleção-->
-    <div class="checkbox-org-container">Classify the organoid above:
-      <label class="checkbox-org-label">
-        <input type="radio" name="selection-org" value="Acceptable"> Acceptable
-      </label>
-      <label class="checkbox-org-label">
-        <input type="radio" name="selection-org" value="Not Acceptable"> Not acceptable
-      </label>
-      <label class="checkbox-org-label">
-        <input type="radio" name="selection-org" value="Not Loaded"> Image did not load
-      </label>
-    </div>
-    <div class="checkbox-photo-container">How would you rate the image quality?
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Good"> Good
-      </label>
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Reasonable"> Reasonable
-      </label>
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Bad"> Bad
-      </label>
-    </div>
+  <div class="checkbox-org-container">Classify the organoid above:
+    <label class="checkbox-org-label">
+      <input type="radio" name="selection-org" value="Acceptable"> Acceptable
+    </label>
+    <label class="checkbox-org-label">
+      <input type="radio" name="selection-org" value="Not Acceptable"> Not acceptable
+    </label>
+    <label class="checkbox-org-label">
+      <input type="radio" name="selection-org" value="Not Loaded"> Image did not load
+    </label>
+  </div>
+  <div class="checkbox-photo-container">How would you rate the image quality?
+    <label class="checkbox-photo-label">
+      <input type="radio" name="selection-photo" value="Good"> Good
+    </label>
+    <label class="checkbox-photo-label">
+      <input type="radio" name="selection-photo" value="Reasonable"> Reasonable
+    </label>
+    <label class="checkbox-photo-label">
+      <input type="radio" name="selection-photo" value="Bad"> Bad
+    </label>
+  </div>
 </div>
 
 <script>
-    JFCustomWidget.subscribe("ready", function() {
-      // Configuração dos valores a partir das definições do widget no Jotform
-      const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
-      const label = `Organoid_${photoNumber}` ;
+  JFCustomWidget.subscribe("ready", function() {
+    const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
+    const photoNumber2 = JFCustomWidget.getWidgetSetting('photoNumber2');
+    const photoNumber3 = JFCustomWidget.getWidgetSetting('photoNumber3');
+    const label = `Organoid_${photoNumber}`;
+    const csvFilePath = "20241203_Organoid_Names.csv";
 
-      const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
-  fetch(csvFilePath)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
-      }
-      return response.text();
-    })
-    .then(csvText => {
-
-      // Parse CSV text into rows and cells
-      const rows = csvText.split("\n").map(row => row.split(","));
-
-      // Find the information corresponding to the "label" variable
-      let matchingInfo = "Not found";
-      rows.forEach(([variable, info]) => {
-        if (variable === label) {
-          matchingInfo = info;
+    fetch(csvFilePath)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
         }
-      });
+        return response.text();
+      })
+      .then(csvText => {
+        const rows = csvText.split("\n").map(row => row.split(","));
+        let matchingInfo = "Not found";
+        rows.forEach(([variable, info]) => {
+          if (variable === label) {
+            matchingInfo = info;
+          }
+        });
 
-      function initializeViewer(containerId, sliderId, photoNumber) {
+        function initializeViewer(containerId, sliderId, photoNumber) {
           const viewer = OpenSeadragon({
             id: containerId,
             prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
@@ -293,46 +290,34 @@
         initializeViewer('focus-container2', 'slider2', photoNumber);
         initializeViewer('focus-container3', 'slider3', photoNumber);
 
-      // Listen for changes in the radio buttons to validate the required fields
-      document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
-        input.addEventListener('change', function() {
-          const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-          const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-
-          // Update widget validity state as soon as fields are valid
-          if (orgClass && photoQual) {
+        document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
+          input.addEventListener('change', function() {
             const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
             const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-            const orgLabel = label;
-            const orgName = matchingInfo;
+            if (orgClass && photoQual) {
+              JFCustomWidget.sendSubmit({
+                valid: true,
+                value: `${label},${matchingInfo},${orgClass},${photoQual}`
+              });
+            }
+          });
+        });
+
+        JFCustomWidget.subscribe("submit", function() {
+          const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
+          const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
+          if (orgClass && photoQual) {
             JFCustomWidget.sendSubmit({
-               valid: true,
-               value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+              valid: true,
+              value: `${label},${matchingInfo},${orgClass},${photoQual}`
             });
+          } else {
+            alert("Please select an option for both questions");
+            JFCustomWidget.sendSubmit({ valid: false });
           }
         });
       });
-
-      // Submission logic
-      JFCustomWidget.subscribe("submit", function() {
-        const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-        const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-
-        if (orgClass && photoQual) {
-          const orgLabel = label;
-          const orgName = matchingInfo;
-          JFCustomWidget.sendSubmit({
-            valid: true,
-            value: `${orgLabel},${orgName},${orgClass},${photoQual}`
-          });
-        } else {
-          alert("Please select an option for both questions");
-          JFCustomWidget.sendSubmit({ valid: false });
-        }
-      });
-    })
-    });
-    
-  </script>
+  });
+</script>
 </body>
 </html>
