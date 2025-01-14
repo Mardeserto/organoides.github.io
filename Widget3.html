@@ -53,7 +53,7 @@
     #container2 {
       position: relative;
       top: -536px;
-      right: -670px;
+      right: -630px;
     }
 
     #container3 {
@@ -164,7 +164,7 @@
 
     #checkbox-container{
       position: relative;
-      top: -700px;
+      top: -570px;
     }
 
     .checkbox-org-container {
@@ -196,7 +196,7 @@
 </head>
 <body>
 <div id="main">
-  <h3 id="label">Organoid Classification Section</h3>
+  <h3 id="label" align="center">Organoid Classification Section</h3>
 
   <!-- Image and Slider Containers -->
   <div id="container1">
@@ -254,6 +254,8 @@
     JFCustomWidget.subscribe("ready", function() {
       // Configuração dos valores a partir das definições do widget no Jotform
       const photoNumber = JFCustomWidget.getWidgetSetting('photoNumber');
+      const photoNumber2 = JFCustomWidget.getWidgetSetting('photoNumber2');
+      const photoNumber3 = JFCustomWidget.getWidgetSetting('photoNumber3');
       const label = `Organoid_${photoNumber}` ;
 
       const csvFilePath = "20241203_Organoid_Names.csv"; // Replace with the correct path to your CSV file
@@ -321,7 +323,7 @@
       prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
       showFullPageControl: false,
       showNavigator: true,
-      tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
+      tileSources: `images/Organoid_${photoNumber2}/focus_1.xml`,
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
     });
@@ -341,7 +343,7 @@
         const focusLevel = this.value;
         const zoomState = saveZoomState();
         viewer2.addTiledImage({
-          tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
+          tileSource: `images/Organoid_${photoNumber2}/focus_${focusLevel}.xml`,
           success: function(event) {
             const tiledImage = event.item;
             restoreZoomState(zoomState);
@@ -359,7 +361,7 @@
       prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
       showFullPageControl: false,
       showNavigator: true,
-      tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
+      tileSources: `images/Organoid_${photoNumber3}/focus_1.xml`,
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
     });
@@ -379,7 +381,7 @@
         const focusLevel = this.value;
         const zoomState = saveZoomState();
         viewer3.addTiledImage({
-          tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
+          tileSource: `images/Organoid_${photoNumber3}/focus_${focusLevel}.xml`,
           success: function(event) {
             const tiledImage = event.item;
             restoreZoomState(zoomState);
