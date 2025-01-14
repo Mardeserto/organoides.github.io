@@ -25,6 +25,12 @@
       width: 710px;
       height: 485px;
     }
+
+    #label {
+      position: relative;
+      right: 50px;
+    }
+
     .draggable {
       cursor: move; 
       cursor: url(/organoides.github.io/images/grab.cur);
@@ -164,7 +170,7 @@
 
     #checkbox-container{
       position: relative;
-      top: -570px;
+      top: -550px;
     }
 
     .checkbox-org-container {
@@ -196,7 +202,7 @@
 </head>
 <body>
 <div id="main">
-  <h3 id="label" align="center">Organoid Classification Section</h3>
+  <h3 id="label">Organoid Classification Section</h3>
 
   <!-- Image and Slider Containers -->
   <div id="container1">
@@ -214,7 +220,7 @@
       <input type="range" id="slider2" class="slider draggable" min="1" max="5" value="1">
     </div>
   </div>
-  
+
   <!-- Inclui as caixas de seleção-->
   <div id="checkbox-container">
     <div class="checkbox-org-container">Classify the organoid above:
