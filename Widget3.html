@@ -54,13 +54,13 @@
     #container2 {
       position: relative;
       top: -535px;
-      right: -800px;
+      right: -700px;
       background-color: rgb(195, 247, 8);
     }
 
     #container3 {
       position: relative;
-      top: -500px;
+      top: -550px;
       background-color: rgb(10, 248, 69);
     }
 
@@ -89,7 +89,7 @@
       position: relative;
       width: 470px;
       top: -15px;
-      right: 10px;
+      right: 15px;
     }
 
     .slider {
@@ -99,7 +99,7 @@
       position: relative;
       margin: auto;
       top: -15px;
-      right: 10px;
+      right: 15px;
     }
 
     .slider::-webkit-slider-runnable-track {
@@ -162,6 +162,12 @@
     .slider::-ms-tooltip { 
         display: none;
     }
+
+    #checkbox-container{
+      top: 0px;
+      right: 0px;
+    }
+
     .checkbox-org-container {
         display: flex;
         flex-direction: column;
@@ -219,6 +225,7 @@
   </div>
 
   <!-- Inclui as caixas de seleção-->
+  <div id="checkbox-container">
     <div class="checkbox-org-container">Classify the organoid above:
       <label class="checkbox-org-label">
         <input type="radio" name="selection-org" value="Acceptable"> Acceptable
@@ -241,6 +248,7 @@
         <input type="radio" name="selection-photo" value="Bad"> Bad
       </label>
     </div>
+  </div>  
 </div>
 
 <script>
