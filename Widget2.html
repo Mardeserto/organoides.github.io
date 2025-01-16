@@ -287,7 +287,7 @@
       // Assuming you are interested in the first image in the viewer (or you only have one image)
       var tiledImage = viewer1.world.getItemAt(0); 
       
-      var imageRect = new OpenSeadragon.Rect(300, 300, 850, 850); // Or whatever area you want to focus on
+      var imageRect = new OpenSeadragon.Rect(300, 200, 850, 850); // Or whatever area you want to focus on
       
       var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
       viewer1.viewport.fitBounds(viewportRect, true);
