@@ -291,21 +291,12 @@
       prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
       showFullPageControl: false,
       showNavigator: true,
-      defaultZoomLevel: 1.05,
       maxZoomPixelRatio: 4,
       tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
     });
-    viewer1.addHandler('open', function() {
-      // Assuming you are interested in the first image in the viewer (or you only have one image)
-      var tiledImage = viewer1.world.getItemAt(0); 
-      
-      var imageRect = new OpenSeadragon.Rect(300, 200, 850, 850); // Or whatever area you want to focus on
-      
-      var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
-      viewer1.viewport.fitBounds(viewportRect, true);
-    });
+
       // Função para salvar o estado de zoom
       function saveZoomState() {
         return { zoom: viewer1.viewport.getZoom(), center: viewer1.viewport.getCenter() };
@@ -373,7 +364,7 @@
 
       // Inicializa o OpenSeadragon
       var viewer3 = OpenSeadragon({
-      id: "focus-container1",
+      id: "focus-container3",
       prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
       showFullPageControl: false,
       showNavigator: true,
