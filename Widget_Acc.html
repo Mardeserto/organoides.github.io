@@ -229,8 +229,11 @@
           // Collect data and submit it
           const orgLabel = label;
           const orgName = matchingInfo;
+          JFCustomWidget.sendData({
+            answered: true
+          })
           JFCustomWidget.sendSubmit({
-            valid: false,
+            valid: true,
             value: `Acquaintance fase: ${orgLabel},${orgName}`
           });
       });
