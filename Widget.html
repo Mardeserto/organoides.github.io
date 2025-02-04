@@ -305,6 +305,9 @@
         if (orgClass && photoQual) {
           const orgLabel = label;
           const orgName = matchingInfo;
+          JFCustomWidget.sendData({
+            answered: true
+          })
           JFCustomWidget.sendSubmit({
             valid: true,
             value: `${orgLabel},${orgName},${orgClass},${photoQual}`
