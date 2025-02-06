@@ -376,11 +376,11 @@
       immediateRender: true
     });
     viewer3.addHandler('open', function() {
-      // Assuming you are interested in the first image in the viewer (or you only have one image)
-      var tiledImage = viewer3.world.getItemAt(0); 
-      
+
+      var botLeft = viewer3.viewport.getBottomLeft();
+      console.log(botLeft)
+      var tiledImage = viewer3.world.getItemAt(0);       
       var imageRect = new OpenSeadragon.Rect(300, 200, 850, 850); // Or whatever area you want to focus on
-      
       var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
       viewer3.viewport.fitBounds(viewportRect, true);
     });
