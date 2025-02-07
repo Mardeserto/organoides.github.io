@@ -299,6 +299,21 @@
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
     });
+    viewer1.addHandler('open', function() {
+
+      let bounds1 = viewer1.viewport.getBounds(); // Get the viewport bounds
+      let bottomRightViewport1 = new OpenSeadragon.Point(bounds1.x + bounds1.width, bounds1.y + bounds1.height); // Bottom-left viewport coordinates    
+      console.log("Bounds1 coordinates:", bounds1);
+
+      let offsetX1 = 0;
+      let offsetY1 = 0;
+
+      var tiledImage1 = viewer1.world.getItemAt(0);       
+      var imageRect1 = new OpenSeadragon.Rect(bottomRightViewport1.x + offsetX1, bottomRightViewport1.y + offsetY1, 640, 480);
+      var viewportRect1 = tiledImage1.imageToViewportRectangle(imageRect1);
+      viewer1.viewport.fitBounds(viewportRect1, true);
+      console.log("OpenSeadragon Rect1:", imageRect1);
+      });
 
       // Função para salvar o estado de zoom
       function saveZoomState() {
@@ -380,18 +395,18 @@
     });
     viewer3.addHandler('open', function() {
 
-      let bounds = viewer3.viewport.getBounds(); // Get the viewport bounds
-      let bottomRightViewport = new OpenSeadragon.Point(bounds.x + bounds.width, bounds.y + bounds.height); // Bottom-left viewport coordinates    
-      console.log("Bottom-right viewport Coordinates:", bottomRightViewport);
+      let bounds3 = viewer3.viewport.getBounds(); // Get the viewport bounds
+      let bottomRightViewport3 = new OpenSeadragon.Point(bounds3.x + bounds3.width, bounds3.y + bounds3.height); // Bottom-left viewport coordinates    
+      console.log("Bounds3 coordinates:", bounds3);
       
-      let offsetX = 0;
-      let offsetY = 0;
+      let offsetX3 = 0;
+      let offsetY3 = 0;
 
-      var tiledImage = viewer3.world.getItemAt(0);       
-      var imageRect = new OpenSeadragon.Rect(bottomRightViewport.x + offsetX, bottomRightViewport.y + offsetY, 640, 480);
-      var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
-      viewer3.viewport.fitBounds(viewportRect, true);
-      console.log("OpenSeadragon Rect:", imageRect);
+      var tiledImage3 = viewer3.world.getItemAt(0);       
+      var imageRect3 = new OpenSeadragon.Rect(bottomRightViewport3.x + offsetX3, bottomRightViewport3.y + offsetY3, 640, 480);
+      var viewportRect3 = tiledImage3.imageToViewportRectangle(imageRect3);
+      viewer3.viewport.fitBounds(viewportRect3, true);
+      console.log("OpenSeadragon Rect3:", imageRect3);
     });
 
       // Função para salvar o estado de zoom
