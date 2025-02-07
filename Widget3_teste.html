@@ -384,8 +384,8 @@
       let bottomRightViewport = new OpenSeadragon.Point(bounds.x + bounds.width, bounds.y + bounds.height); // Bottom-left viewport coordinates    
       console.log("Bottom-right viewport Coordinates:", bottomRightViewport);
       
-      let offsetX = -960;
-      let offsetY = -660;
+      let offsetX = 0;
+      let offsetY = 0;
 
       var tiledImage = viewer3.world.getItemAt(0);       
       var imageRect = new OpenSeadragon.Rect(bottomRightViewport.x + offsetX, bottomRightViewport.y + offsetY, 850, 850);
