@@ -378,6 +378,12 @@
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
     });
+    viewer3.addHandler('open', function() {
+      var tiledImage = viewer3.world.getItemAt(0);       
+      var imageRect = new OpenSeadragon.Rect(0, 0, 850, 850); // Or whatever area you want to focus on
+      var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
+      viewer3.viewport.fitBounds(viewportRect, true);
+    });
 
       // Função para salvar o estado de zoom
       function saveZoomState() {

@@ -377,8 +377,6 @@
     });
     viewer3.addHandler('open', function() {
 
-      var botLeft = viewer3.viewport.getBottomLeft();
-      console.log("Bottom Left Coord");
       var tiledImage = viewer3.world.getItemAt(0);       
       var imageRect = new OpenSeadragon.Rect(300, 200, 850, 850); // Or whatever area you want to focus on
       var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
