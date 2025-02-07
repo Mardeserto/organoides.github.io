@@ -381,14 +381,14 @@
     viewer3.addHandler('open', function() {
 
       let bounds = viewer3.viewport.getBounds(); // Get the viewport bounds
-      let bottomRightViewport = new OpenSeadragon.Point(bounds.x, bounds.y); // Bottom-left viewport coordinates    
+      let bottomRightViewport = new OpenSeadragon.Point(bounds.x + bounds.width, bounds.y + bounds.height); // Bottom-left viewport coordinates    
       console.log("Bottom-right viewport Coordinates:", bottomRightViewport);
       
       let offsetX = 0;
       let offsetY = 0;
 
       var tiledImage = viewer3.world.getItemAt(0);       
-      var imageRect = new OpenSeadragon.Rect(bottomRightViewport.x + offsetX, bottomRightViewport.y + offsetY, 850, 850);
+      var imageRect = new OpenSeadragon.Rect(bottomRightViewport.x + offsetX, bottomRightViewport.y + offsetY, 640, 480);
       var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
       viewer3.viewport.fitBounds(viewportRect, true);
       console.log("OpenSeadragon Rect:", imageRect);
