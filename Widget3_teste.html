@@ -380,8 +380,10 @@
     });
     viewer3.addHandler('open', function() {
       var tiledImage = viewer3.world.getItemAt(0); 
-      var tiledImageDim = tiledImage.source.dimensions      
-      var imageRect = new OpenSeadragon.Rect(tiledImageDim.x, tiledImageDim.y, 850, 850); // Or whatever area you want to focus on
+      var tiledImageDim = tiledImage.source.dimensions
+      var rectwidth = 850;
+      var rectheight = 850;      
+      var imageRect = new OpenSeadragon.Rect(tiledImageDim.x - rectwidth, tiledImageDim.y - rectheight, rectwidth, rectheight); // Or whatever area you want to focus on
       var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
       viewer3.viewport.fitBounds(viewportRect, true);
       console.log ("Image Dimensions:", tiledImageDim);
