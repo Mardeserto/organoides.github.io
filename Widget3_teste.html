@@ -382,8 +382,8 @@
       var tiledImageDim = tiledImage.source.dimensions
       var rectwidth = 850;
       var rectheight = 850;
-      var offsetX = -100;
-      var offsetY = -100      
+      var offsetX = -150;
+      var offsetY = -50;      
       var imageRect = new OpenSeadragon.Rect(tiledImageDim.x - rectwidth + offsetX, tiledImageDim.y - rectheight + offsetY, rectwidth, rectheight); // Or whatever area you want to focus on
       var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
       viewer3.viewport.fitBounds(viewportRect, true);
