@@ -381,7 +381,7 @@
     viewer3.addHandler('open', function() {
 
       let bounds = viewer3.viewport.getBounds(); // Get the viewport bounds
-      let bottomRightViewport = new OpenSeadragon.Point(bounds.x + bounds.width, bounds.y + bounds.height); // Bottom-left viewport coordinates    
+      let bottomRightViewport = new OpenSeadragon.Point(bounds.x, bounds.y); // Bottom-left viewport coordinates    
       console.log("Bottom-right viewport Coordinates:", bottomRightViewport);
       
       let offsetX = 0;
