@@ -382,14 +382,13 @@
 
       let bounds = viewer3.viewport.getBounds(); // Get the viewport bounds
       let bottomRightViewport = new OpenSeadragon.Point(bounds.x + bounds.width, bounds.y + bounds.height); // Bottom-left viewport coordinates    
-      let bottomRightImage = viewer3.viewport.viewportToImageCoordinates(bottomRightViewport.x, bottomRightViewport.y); // Convert to image coordinates
-      console.log("Bottom-left Image Coordinates:", bottomRightImage);
+      console.log("Bottom-right viewport Coordinates:", bottomRightViewport);
       
       let offsetX = -960;
       let offsetY = -660;
 
       var tiledImage = viewer3.world.getItemAt(0);       
-      var imageRect = new OpenSeadragon.Rect(bottomRightImage.x + offsetX, bottomRightImage.y + offsetY, 850, 850);
+      var imageRect = new OpenSeadragon.Rect(bottomRightViewport.x + offsetX, bottomRightViewport.y + offsetY, 850, 850);
       var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
       viewer3.viewport.fitBounds(viewportRect, true);
       console.log("OpenSeadragon Rect:", imageRect);
