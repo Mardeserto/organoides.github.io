@@ -8,14 +8,14 @@
     var viewer = null;
     function init() {
      viewer = new Seadragon.Viewer("container");
-     viewer.openDzi("focus_3.xml",'<?xml version="1.0" encoding="utf-8"?><Image TileSize="256" Overlap="1" Format="png" ServerFormat="Default" xmlns="http://schemas.microsoft.com/deepzoom/"> <Size Width="1304" Height="1092" /></Image>');
+     viewer.openDzi("focus_3.xml",'<?xml version="1.0" encoding="utf-8"?><Image TileSize="256" Overlap="1" Format="png" ServerFormat="Default" xmlns="http://schemas.microsoft.com/deepzoom/"> <Size Width="1128" Height="832" /></Image>');
     }
     Seadragon.Utils.addEvent(window, "load", init);
   </script>
   <style type="text/css">
     #container {
-     width: 580px;
-     height: 430px;
+     width: 640px;
+     height: 480px;
      background-color: black;
      border: 1px solid black;
      color: white;
