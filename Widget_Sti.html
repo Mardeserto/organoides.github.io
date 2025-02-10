@@ -263,7 +263,7 @@
             }
           });
 
-          // Inicializa o OpenSeadragon
+          // Initialize OpenSeadragon
           var viewer = OpenSeadragon({
             id: "focus-container",
             prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
@@ -273,6 +273,20 @@
             tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
             blendTime: 0.2, // Controle de transição suave (0.2 segundos)
             immediateRender: true
+          });
+
+          // Get image dimensions and adjust inital zoom to match unstiched photos' size calibration and position
+          viewer3.addHandler('open', function () {
+            var tiledImage = viewer3.world.getItemAt(0);
+            var tiledImageDim = tiledImage.source.dimensions
+            var rectwidth = 850;
+            var rectheight = 850;
+            var offsetX = -150;
+            var offsetY = 0;
+            var imageRect = new OpenSeadragon.Rect(tiledImageDim.x - rectwidth + offsetX, tiledImageDim.y - rectheight + offsetY, rectwidth, rectheight);
+            var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
+            viewer3.viewport.fitBounds(viewportRect, true);
+            console.log("Image Dimensions:", tiledImageDim);
           });
 
           // Função para salvar o estado de zoom

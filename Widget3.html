@@ -369,20 +369,23 @@
       prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
       showFullPageControl: false,
       showNavigator: true,
-      defaultZoomLevel: 1.05,
       maxZoomPixelRatio: 4,
       tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
       blendTime: 0.2, // Controle de transição suave (0.2 segundos)
       immediateRender: true
     });
+
     viewer3.addHandler('open', function() {
-      // Assuming you are interested in the first image in the viewer (or you only have one image)
       var tiledImage = viewer3.world.getItemAt(0); 
-      
-      var imageRect = new OpenSeadragon.Rect(300, 200, 850, 850); // Or whatever area you want to focus on
-      
+      var tiledImageDim = tiledImage.source.dimensions
+      var rectwidth = 850;
+      var rectheight = 850;
+      var offsetX = -150;
+      var offsetY = 0;      
+      var imageRect = new OpenSeadragon.Rect(tiledImageDim.x - rectwidth + offsetX, tiledImageDim.y - rectheight + offsetY, rectwidth, rectheight); // Or whatever area you want to focus on
       var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
       viewer3.viewport.fitBounds(viewportRect, true);
+      console.log ("Image Dimensions:", tiledImageDim);
     });
 
       // Função para salvar o estado de zoom
