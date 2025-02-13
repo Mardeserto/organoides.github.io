@@ -254,15 +254,14 @@
           return response.text();
         })
         .then(csvText => {
-
           // Parse CSV text into rows and cells
           const rows = csvText.split("\n").map(row => row.split(","));
 
           // Find the information corresponding to the "label" variable
           let matchingInfo = "Not found";
           rows.forEach(([variable, info]) => {
-            if (variable === label) {
-              matchingInfo = info;
+            if (variable.trim() === label.trim()) {
+              matchingInfo = info.trim(); // Trim whitespace & newlines
             }
           });
 
