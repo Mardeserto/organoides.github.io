@@ -11,6 +11,7 @@
 
   <!-- Inclui o OpenSeadragon -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/msalsbery/OpenSeadragonFiltering/dist/openseadragon-filtering.js"></script>
 
   <style>
     html {
@@ -149,6 +150,23 @@
       display: none;
     }
 
+    #brightness-contrast-container {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #brightness-contrast-container label {
+      font-size: 14px;
+      margin: 5px;
+    }
+
+    #brightness-slider, #contrast-slider {
+      width: 200px;
+      margin-bottom: 10px;
+    }
+
     .checkbox-org-container {
       display: flex;
       flex-direction: column;
@@ -206,6 +224,14 @@
     <div id="slider-container"></div>
     <div id="slider-label">Focus Adjustment</div>
     <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
+
+    <div id="brightness-contrast-container">
+      <label for="brightness-slider">Brightness</label>
+      <input type="range" id="brightness-slider" min="50" max="200" value="100" step="1">
+      
+      <label for="contrast-slider">Contrast</label>
+      <input type="range" id="contrast-slider" min="50" max="200" value="100" step="1">
+    </div>
 
     <!-- Inclui as caixas de seleção-->
     <div class="checkbox-org-container">Classify the organoid above:
@@ -277,6 +303,24 @@
             immediateRender: true
           });
 
+          function applyFilters() {
+            var brightness = parseFloat(document.getElementById("brightness").value);
+            var contrast = parseFloat(document.getElementById("contrast").value);
+            var sharpen = parseFloat(document.getElementById("sharpen").value);
+
+            viewer.setFilterOptions({
+                filters: {
+                    processors: [
+                        OpenSeadragon.Filters.BRIGHTNESS(brightness),
+                        OpenSeadragon.Filters.CONTRAST(contrast),
+                        OpenSeadragon.Filters.SHARPEN(sharpen)
+                    ]
+                }
+            });
+            viewer.setFilterMode("process");
+        }
+
+
           // Função para salvar o estado de zoom
           function saveZoomState() {
             return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
@@ -303,6 +347,10 @@
               }
             });
           });
+
+        document.getElementById("brightness").addEventListener("input", applyFilters);
+        document.getElementById("contrast").addEventListener("input", applyFilters);
+        document.getElementById("sharpen").addEventListener("input", applyFilters);
 
           // Listen for changes in the radio buttons to validate the required fields
           document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
