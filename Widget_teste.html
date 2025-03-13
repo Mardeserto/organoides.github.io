@@ -311,6 +311,22 @@
             viewer.viewport.zoomTo(state.zoom, state.center);
           }
 
+          // Get sliders
+          const brightnessSlider = document.getElementById("brightness-slider");
+          const contrastSlider = document.getElementById("contrast-slider");
+
+          // Function to update brightness & contrast
+          function updateFilters() {
+            const brightness = brightnessSlider.value;
+            const contrast = contrastSlider.value;
+            
+            const tiledImages = viewer.world.getItemAt(0).getCanvas();
+            
+            if (tiledImages) {
+              tiledImages.style.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
+            }
+          }
+
           // Monitora o slider para mudanças de foco
           document.getElementById("slider").addEventListener('input', function () {
             const focusLevel = this.value;
@@ -327,22 +343,6 @@
               }
             });
           });
-
-          // Get sliders
-          const brightnessSlider = document.getElementById("brightness-slider");
-          const contrastSlider = document.getElementById("contrast-slider");
-
-          // Function to update brightness & contrast
-          function updateFilters() {
-            const brightness = brightnessSlider.value;
-            const contrast = contrastSlider.value;
-            
-            const tiledImages = viewer.world.getItemAt(0).getCanvas();
-            
-            if (tiledImages) {
-              tiledImages.style.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
-            }
-          }
 
           // Event listeners for sliders
           brightnessSlider.addEventListener("input", updateFilters);
