@@ -10,8 +10,8 @@
   <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
 
   <!-- Inclui o OpenSeadragon -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/msalsbery/OpenSeadragonFiltering/dist/openseadragon-filtering.js"></script>
+  <script src="/openseadragon/openseadragon.js"></script>
+  <script src="/openseadragon-filtering.js"></script>
 
   <style>
     html {
@@ -346,8 +346,8 @@
             });
           });
 
-        document.getElementById("brightness").addEventListener("input", applyFilters);
-        document.getElementById("contrast").addEventListener("input", applyFilters);
+        document.getElementById("brightness").addEventListener('input', applyFilters);
+        document.getElementById("contrast").addEventListener('input', applyFilters);
 
           // Listen for changes in the radio buttons to validate the required fields
           document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
