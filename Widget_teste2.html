@@ -162,7 +162,7 @@
       margin: 5px;
     }
 
-    #brightness-slider, #contrast-slider {
+    #brightness, #contrast {
       width: 200px;
       margin-bottom: 10px;
     }
@@ -226,11 +226,11 @@
     <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
 
     <div id="brightness-contrast-container">
-      <label for="brightness-slider">Brightness</label>
-      <input type="range" id="brightness-slider" min="50" max="200" value="100" step="1">
+      <label for="brightness">Brightness</label>
+      <input type="range" id="brightness" min="50" max="200" value="100" step="1">
       
-      <label for="contrast-slider">Contrast</label>
-      <input type="range" id="contrast-slider" min="50" max="200" value="100" step="1">
+      <label for="contrast">Contrast</label>
+      <input type="range" id="contrast" min="50" max="200" value="100" step="1">
     </div>
 
     <!-- Inclui as caixas de seleção-->
@@ -306,14 +306,12 @@
           function applyFilters() {
             var brightness = parseFloat(document.getElementById("brightness").value);
             var contrast = parseFloat(document.getElementById("contrast").value);
-            var sharpen = parseFloat(document.getElementById("sharpen").value);
 
             viewer.setFilterOptions({
                 filters: {
                     processors: [
                         OpenSeadragon.Filters.BRIGHTNESS(brightness),
                         OpenSeadragon.Filters.CONTRAST(contrast),
-                        OpenSeadragon.Filters.SHARPEN(sharpen)
                     ]
                 }
             });
@@ -350,7 +348,6 @@
 
         document.getElementById("brightness").addEventListener("input", applyFilters);
         document.getElementById("contrast").addEventListener("input", applyFilters);
-        document.getElementById("sharpen").addEventListener("input", applyFilters);
 
           // Listen for changes in the radio buttons to validate the required fields
           document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
