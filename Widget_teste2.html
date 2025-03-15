@@ -302,13 +302,16 @@
             blendTime: 0.2, // Controle de transição suave (0.2 segundos)
             immediateRender: true
           });
-          var brightness = parseFloat(document.getElementById("brightness").value);
-          viewer.setFilterOptions({
+          
+          document.getElementById("brightness").addEventListener("input", function() {
+            var brightness = parseFloat(document.getElementById("brightness").value);
+            viewer.setFilterOptions({
               filters: {
-                  processors: OpenSeadragon.Filters.BRIGHTNESS(255) 
+                  processors: OpenSeadragon.Filters.BRIGHTNESS(brightness) 
               }
+            });
           });
-
+          
           // Função para salvar o estado de zoom
           function saveZoomState() {
             return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
