@@ -303,7 +303,7 @@
             immediateRender: true
           });
            
-          const gammaradio = document.querySelector('input[name="gamma"]:checked')?.value || 1;
+          const gammaradio = document.querySelector('input[name="gamma"]:checked').value;
             gammaradio.addEventListener('change', function() {
               const parsegamma = parseFloat(gammaradio);
               viewer.setFilterOptions({
@@ -311,24 +311,6 @@
                   processors: OpenSeadragon.Filters.GAMMA(parsegamma)
                 }
               });
-            });
-
-          const gammaswitch1 = document.querySelector('#gamma-switch1 input');
-
-            gammaswitch1.addEventListener('change', function() {
-              if (this.checked) {
-                viewer.setFilterOptions({
-                  filters: {
-                    processors: OpenSeadragon.Filters.GAMMA(0.4)
-                  }
-                });
-              } else {
-                viewer.setFilterOptions({
-                  filters: {
-                    processors: OpenSeadragon.Filters.GAMMA(1)
-                  }
-                });
-              }
             });
 
           // Função para salvar o estado de zoom
