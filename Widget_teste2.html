@@ -162,7 +162,7 @@
       margin: 5px;
     }
 
-    #brightness, #contrast {
+    #brightness, #contrast, #exposure, #gamma {
       width: 200px;
       margin-bottom: 10px;
     }
@@ -230,7 +230,13 @@
       <input type="range" id="brightness" min="-255" max="255" value="0" step="10">
       
       <label for="contrast">Contrast</label>
-      <input type="range" id="contrast" min="-255" max="255" value="0" step="10">
+      <input type="range" id="contrast" min="0" max="5" value="1" step="0.1">
+
+      <label for="exposure">Contrast</label>
+      <input type="range" id="exposure" min="-100" max="100" value="0" step="10">
+
+      <label for="gamma">Contrast</label>
+      <input type="range" id="gamma" min="0" max="5" value="1" step="0.1">
     </div>
 
     <!-- Inclui as caixas de seleção-->
@@ -317,6 +323,24 @@
             viewer.setFilterOptions({
               filters: {
                   processors: OpenSeadragon.Filters.CONTRAST(contrast)
+              }
+            });
+          });
+
+          document.getElementById("exposure").addEventListener('input', function() {
+            var exposure = parseFloat(document.getElementById("exposure").value);
+            viewer.setFilterOptions({
+              filters: {
+                  processors: OpenSeadragon.Filters.EXPOSURE(exposure)
+              }
+            });
+          });
+
+          document.getElementById("gamma").addEventListener('input', function() {
+            var gamma = parseFloat(document.getElementById("gamma").value);
+            viewer.setFilterOptions({
+              filters: {
+                  processors: OpenSeadragon.Filters.GAMMA(gamma)
               }
             });
           });
