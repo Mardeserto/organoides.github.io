@@ -308,6 +308,8 @@
           
           document.getElementById("brightness").addEventListener('input', function() {
             var brightness = parseFloat(document.getElementById("brightness").value);
+            var contrast = parseFloat(document.getElementById("contrast").value);
+            var gamma = parseFloat(document.getElementById("gamma").value);
             viewer.setFilterOptions({
               filters: {
                 processors: [
@@ -320,7 +322,9 @@
           });
 
           document.getElementById("contrast").addEventListener('input', function() {
+            var brightness = parseFloat(document.getElementById("brightness").value);
             var contrast = parseFloat(document.getElementById("contrast").value);
+            var gamma = parseFloat(document.getElementById("gamma").value);
             viewer.setFilterOptions({
               filters: {
                 processors: [
@@ -333,6 +337,8 @@
           });
 
           document.getElementById("gamma").addEventListener('input', function() {
+            var brightness = parseFloat(document.getElementById("brightness").value);
+            var contrast = parseFloat(document.getElementById("contrast").value);
             var gamma = parseFloat(document.getElementById("gamma").value);
             viewer.setFilterOptions({
               filters: {
