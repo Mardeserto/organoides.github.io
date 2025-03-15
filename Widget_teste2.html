@@ -310,7 +310,11 @@
             var brightness = parseFloat(document.getElementById("brightness").value);
             viewer.setFilterOptions({
               filters: {
-                  processors: OpenSeadragon.Filters.BRIGHTNESS(brightness) 
+                processors: [
+                  OpenSeadragon.Filters.BRIGHTNESS(brightness),
+                  OpenSeadragon.Filters.CONTRAST(contrast),
+                  OpenSeadragon.Filters.GAMMA(gamma)
+                ]
               }
             });
           });
@@ -319,7 +323,11 @@
             var contrast = parseFloat(document.getElementById("contrast").value);
             viewer.setFilterOptions({
               filters: {
-                  processors: OpenSeadragon.Filters.CONTRAST(contrast)
+                processors: [
+                  OpenSeadragon.Filters.BRIGHTNESS(brightness),
+                  OpenSeadragon.Filters.CONTRAST(contrast),
+                  OpenSeadragon.Filters.GAMMA(gamma)
+                ]
               }
             });
           });
@@ -328,7 +336,11 @@
             var gamma = parseFloat(document.getElementById("gamma").value);
             viewer.setFilterOptions({
               filters: {
-                  processors: OpenSeadragon.Filters.GAMMA(gamma)
+                processors: [
+                  OpenSeadragon.Filters.BRIGHTNESS(brightness),
+                  OpenSeadragon.Filters.CONTRAST(contrast),
+                  OpenSeadragon.Filters.GAMMA(gamma)
+                ]
               }
             });
           });
