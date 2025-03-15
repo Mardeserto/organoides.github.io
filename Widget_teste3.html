@@ -302,7 +302,7 @@
            
           const gammaradio = document.querySelector('input[name="gamma"]:checked')?.value || 1;
           const parsegamma = parseFloat(gammaradio);
-          gammaradio.addEventListener('input', function() {
+          document.getElementsByName("gamma").addEventListener('input', function() {
             viewer.setFilterOptions({
               filters: {
                 processors: OpenSeadragon.Filters.GAMMA(parsegamma)
