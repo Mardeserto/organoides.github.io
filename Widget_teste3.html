@@ -302,14 +302,15 @@
             blendTime: 0.2, // Controle de transição suave (0.2 segundos)
             immediateRender: true
           });
-            
-          const gammaradio = parseFloat(document.querySelector('input[name="gamma"]:checked').value);
+           
+          const gammaradio = document.querySelector('input[name="gamma"]:checked')?.value || 1;
             gammaradio.addEventListener('change', function() {
-                viewer.setFilterOptions({
-                  filters: {
-                    processors: OpenSeadragon.Filters.GAMMA(gammaradio)
-                  }
-                });
+              const parsegamma = parseFloat(gammaradio);
+              viewer.setFilterOptions({
+                filters: {
+                  processors: OpenSeadragon.Filters.GAMMA(parsegamma)
+                }
+              });
             });
 
           const gammaswitch1 = document.querySelector('#gamma-switch1 input');
