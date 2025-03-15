@@ -313,7 +313,7 @@
           });
 
           document.getElementById("contrast").addEventListener('input', function() {
-            var brightness = parseFloat(document.getElementById("contrast").value);
+            var contrast = parseFloat(document.getElementById("contrast").value);
             viewer.setFilterOptions({
               filters: {
                   processors: OpenSeadragon.Filters.CONTRAST(contrast)
