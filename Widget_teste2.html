@@ -309,6 +309,8 @@
               }
           });
 
+          viewer.setFilterMode("process");
+
           // Função para salvar o estado de zoom
           function saveZoomState() {
             return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
