@@ -10,7 +10,7 @@
   <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
 
   <!-- Inclui o OpenSeadragon -->
-  <script src="/organoides.github.io/openseadragon/openseadragon.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/openseadragon.min.js"></script>
   <script src="/organoides.github.io/openseadragon/openseadragon-filtering.js"></script>
 
   <style>
@@ -305,7 +305,7 @@
           var brightness = parseFloat(document.getElementById("brightness").value);
           viewer.setFilterOptions({
               filters: {
-                  processors:OpenSeadragon.Filters.BRIGHTNESS(255) 
+                  processors: OpenSeadragon.Filters.BRIGHTNESS(255) 
               }
           });
 
