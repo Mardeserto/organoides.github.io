@@ -299,8 +299,8 @@
             immediateRender: true
           });
            
-          const gammaradio = document.querySelector('input[name="gamma"]:checked').value;
-            gammaradio.addEventListener('input', function() {
+          const gammaradio = document.querySelector('input[name="gamma"]:checked')?.value || null;
+            gammaradio.addEventListener('change', function() {
               const parsegamma = parseFloat(gammaradio);
               viewer.setFilterOptions({
                 filters: {
