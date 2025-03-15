@@ -302,8 +302,7 @@
             blendTime: 0.2, // Controle de transição suave (0.2 segundos)
             immediateRender: true
           });
-          
-              const gammaradio = document.querySelector('input[name="gamma"]:checked')?.value || 1;
+              const gammaradio = parseFloat(document.querySelector('input[name="gamma"]:checked').value);
               gammaradio.addEventListener('change', function() {
               if (this.checked) {
                 viewer.setFilterOptions({
