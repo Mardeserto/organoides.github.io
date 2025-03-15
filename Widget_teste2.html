@@ -303,7 +303,7 @@
             immediateRender: true
           });
           
-          document.getElementById("brightness").addEventListener("input", function() {
+          document.getElementById("brightness").addEventListener('input', function() {
             var brightness = parseFloat(document.getElementById("brightness").value);
             viewer.setFilterOptions({
               filters: {
@@ -311,7 +311,16 @@
               }
             });
           });
-          
+
+          document.getElementById("contrast").addEventListener('input', function() {
+            var brightness = parseFloat(document.getElementById("contrast").value);
+            viewer.setFilterOptions({
+              filters: {
+                  processors: OpenSeadragon.Filters.CONTRAST(contrast)
+              }
+            });
+          });
+
           // Função para salvar o estado de zoom
           function saveZoomState() {
             return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
