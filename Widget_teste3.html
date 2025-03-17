@@ -299,10 +299,10 @@
             blendTime: 0.2, // Controle de transição suave (0.2 segundos)
             immediateRender: true
           });
-           
-          const gammaradio = document.querySelector('input[name="gamma"]:checked')?.value || 1;
-          const parsegamma = parseFloat(gammaradio);
-          document.getElementsByName("gamma").addEventListener('input', function() {
+
+          document.querySelector('input[name="gamma"').addEventListener('change', function() {
+            const gammaradio = document.querySelector('input[name="gamma"]:checked')?.value || 1;
+            const parsegamma = parseFloat(gammaradio);
             viewer.setFilterOptions({
               filters: {
                 processors: OpenSeadragon.Filters.GAMMA(parsegamma)
