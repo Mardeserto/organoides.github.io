@@ -361,8 +361,33 @@
             immediateRender: true
           });
 
-            const tiledImage = viewer.drawer.canvas; // Pega a imagem carregada no OpenSeadragon
-              console.log("tiledImage:", tiledImage);
+          const tiledImage = viewer.drawer.canvas; // Pega a imagem carregada no OpenSeadragon
+            console.log("tiledImage:", tiledImage);
+          const img = tiledImage.source;
+            console.log("img:", img);
+          const ctx = tiledImage.getContext("2d");
+            
+          img.onload = function () {
+            ctx.drawImage(img, 0, 0, tiledImage.width, tiledImage.height);
+            const imageData = ctx.getImageData(0, 0, tiledImage.width, tiledImage.height);
+            const pixels = imageData.data;
+
+            let totalBrightness = 0;
+            let count = 0;
+
+            for (let i = 0; i < pixels.length; i += 4 * sampleRate) { // Amostragem a cada `sampleRate` pixels
+              const r = pixels[i];
+              const g = pixels[i + 1];
+              const b = pixels[i + 2];
+
+              const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
+              totalBrightness += brightness;
+              count++;
+            }
+          
+            const avgBrightness = totalBrightness / count;
+            console.log("Brilho médio:", avgBrightness);
+          };
 
           const toggleSwitch = document.querySelector('.switch input');
           toggleSwitch.addEventListener('change', function() {
