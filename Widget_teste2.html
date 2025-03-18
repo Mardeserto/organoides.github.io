@@ -361,48 +361,12 @@
             immediateRender: true
           });
 
-          function getAverageBrightness() {
             const tiledImage = viewer.world.getItemAt(0); // Pega a imagem carregada no OpenSeadragon
-            if (!tiledImage) return null;
+              console.log("tiledImage:", tiledImage);
 
-            const img = tiledImage.source; 
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-
-            canvas.width = img.width;
-            canvas.height = img.height;
-
-            const imgElement = new Image();
-            imgElement.crossOrigin = "Anonymous"; // Evita problemas de CORS
-            imgElement.src = img.url;
-
-            imgElement.onload = function () {
-              ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
-              const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-              const pixels = imageData.data;
-
-              let totalBrightness = 0;
-              let count = 0;
-
-              for (let i = 0; i < pixels.length; i += 4) {
-                const r = pixels[i];
-                const g = pixels[i + 1];
-                const b = pixels[i + 2];
-
-                // Fórmula do brilho médio: (0.299*R + 0.587*G + 0.114*B)
-                const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
-                totalBrightness += brightness;
-                count++;
-              }
-
-              const avgBrightness = totalBrightness / count;
-              console.log("Brilho médio:", avgBrightness);
-            };
-          }
           const toggleSwitch = document.querySelector('.switch input');
           toggleSwitch.addEventListener('change', function() {
             if (this.checked) {
-              getAverageBrightness;
               viewer.setFilterOptions({
                 filters: {
                   processors: OpenSeadragon.Filters.GAMMA(0.4)
