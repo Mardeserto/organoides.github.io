@@ -367,8 +367,8 @@
             console.log("ctx:", ctx);
 
           img.onload = function () {
-            ctx.drawImage(img, 0, 0, tiledImage.width, tiledImage.height);
-            const imageData = ctx.getImageData(0, 0, tiledImage.width, tiledImage.height);
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+            const imageData = ctx.getImageData(0, 0, img.width, img.height);
             const pixels = imageData.data;
 
             let totalBrightness = 0;
