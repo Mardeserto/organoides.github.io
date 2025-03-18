@@ -361,6 +361,28 @@
             immediateRender: true
           });
 
+          function brightnessProcessor(context, callback) {
+            const imgData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
+            const pixels = imgData.data;
+
+            let totalBrightness = 0;
+            let count = 0;
+
+            for (let i = 0; i < pixels.length; i += 4) {
+              const r = pixels[i];
+              const g = pixels[i + 1];
+              const b = pixels[i + 2];
+
+              const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
+              totalBrightness += brightness;
+              count++;
+            }
+
+            const avgBrightness = totalBrightness / count;
+            console.log("Brilho médio (filtro OpenSeadragon):", avgBrightness);
+            callback();
+          }
+
           const toggleSwitch = document.querySelector('.switch input');
           toggleSwitch.addEventListener('change', function() {
             if (this.checked) {
