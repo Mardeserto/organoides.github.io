@@ -361,7 +361,7 @@
             immediateRender: true
           });
 
-          const img = viewer.drawer.canvas; // Pega a imagem carregada no OpenSeadragon
+          const img = viewer.world.getItemAt(0).canvas; // Pega a imagem carregada no OpenSeadragon
             console.log("tiledImage:", img);
           const ctx = img.getContext("2d");
             console.log("ctx:", ctx);
