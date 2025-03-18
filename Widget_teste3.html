@@ -300,16 +300,21 @@
             immediateRender: true
           });
 
-          document.querySelector('input[name="gamma"').addEventListener('input', function() {
-            const gammaradio = document.querySelector('input[name="gamma"]:checked').value;
-            const parsegamma = parseFloat(gammaradio);
-            viewer.setFilterOptions({
-              filters: {
-                processors: OpenSeadragon.Filters.GAMMA(parsegamma)
-              }
+          document.querySelectorAll('input[name="gamma"]').forEach((radio) => {
+            radio.addEventListener('input', function() {
+              const gammaradio = document.querySelector('input[name="gamma"]:checked').value;
+              const parsegamma = parseFloat(gammaradio);
+              
+              viewer.setFilterOptions({
+                filters: {
+                  processors: OpenSeadragon.Filters.GAMMA(parsegamma)
+                }
+              });
+
+              console.log("gammaradio:", gammaradio, "parsegamma:", parsegamma);
             });
-            console.log ("gammaradio:", gammaradio, "parsegamma:", parsegamma);
-          });
+        });
+
 
           // Função para salvar o estado de zoom
           function saveZoomState() {
