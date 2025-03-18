@@ -361,8 +361,9 @@
             immediateRender: true
           });
 
-          const tiledImage = viewer.world.getItemAt(0); // Pega a imagem carregada no OpenSeadragon
-
+          function getAverageBrightness() {
+            const tiledImage = viewer.world.getItemAt(0); // Pega a imagem carregada no OpenSeadragon
+            if (!tiledImage) return null;
 
             const img = tiledImage.source; 
             const canvas = document.createElement("canvas");
@@ -376,28 +377,28 @@
             imgElement.src = img.url;
 
             imgElement.onload = function () {
-                ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const pixels = imageData.data;
+              ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+              const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+              const pixels = imageData.data;
 
-                let totalBrightness = 0;
-                let count = 0;
+              let totalBrightness = 0;
+              let count = 0;
 
-                for (let i = 0; i < pixels.length; i += 4) {
-                    const r = pixels[i];
-                    const g = pixels[i + 1];
-                    const b = pixels[i + 2];
+              for (let i = 0; i < pixels.length; i += 4) {
+                const r = pixels[i];
+                const g = pixels[i + 1];
+                const b = pixels[i + 2];
 
-                    // Fórmula do brilho médio: (0.299*R + 0.587*G + 0.114*B)
-                    const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
-                    totalBrightness += brightness;
-                    count++;
-                }
+                // Fórmula do brilho médio: (0.299*R + 0.587*G + 0.114*B)
+                const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
+                totalBrightness += brightness;
+                count++;
+              }
 
-                const avgBrightness = totalBrightness / count;
-                console.log("Brilho médio:", avgBrightness);
+              const avgBrightness = totalBrightness / count;
+              console.log("Brilho médio:", avgBrightness);
             };
-
+          }
           const toggleSwitch = document.querySelector('.switch input');
           toggleSwitch.addEventListener('change', function() {
             if (this.checked) {
