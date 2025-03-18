@@ -402,6 +402,7 @@
           const toggleSwitch = document.querySelector('.switch input');
           toggleSwitch.addEventListener('change', function() {
             if (this.checked) {
+              getAverageBrightness;
               viewer.setFilterOptions({
                 filters: {
                   processors: OpenSeadragon.Filters.GAMMA(0.4)
