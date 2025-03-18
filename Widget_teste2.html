@@ -361,12 +361,11 @@
             immediateRender: true
           });
 
-          const tiledImage = viewer.drawer.canvas; // Pega a imagem carregada no OpenSeadragon
-            console.log("tiledImage:", tiledImage);
-          const img = tiledImage.source;
-            console.log("img:", img);
-          const ctx = tiledImage.getContext("2d");
-            
+          const img = viewer.drawer.canvas; // Pega a imagem carregada no OpenSeadragon
+            console.log("tiledImage:", img);
+          const ctx = img.getContext("2d");
+            console.log("ctx:", ctx);
+
           img.onload = function () {
             ctx.drawImage(img, 0, 0, tiledImage.width, tiledImage.height);
             const imageData = ctx.getImageData(0, 0, tiledImage.width, tiledImage.height);
