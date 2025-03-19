@@ -293,12 +293,17 @@
             id: "focus-container",
             prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
             showFullPageControl: false,
+            preload: true,
             showNavigator: true,
             maxZoomPixelRatio: 4,
             tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
             blendTime: 0.2, // Controle de transição suave (0.2 segundos)
             immediateRender: true
           });
+
+          var img = viewer.drawer;
+          var canvas = viewer.drawer.canvas;
+          console.log = ("img:", img, "canvas:", canvas);
 
           document.querySelectorAll('input[name="gamma"]').forEach((radio) => {
             radio.addEventListener('input', function() {
