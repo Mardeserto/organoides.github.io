@@ -306,7 +306,10 @@
         <span class="switch-label">Transparency</span>
       </label>
     </div>
-
+    <div>
+      <input type="text" id="userInput" placeholder="100">
+      <button onclick="getInputValue()">Submit</button>
+    </div>
     <!-- Inclui as caixas de seleção-->
     <div class="checkbox-org-container">Classify the organoid above:
       <label class="checkbox-org-label">
@@ -377,12 +380,20 @@
             immediateRender: true
           });
 
+          function getInputValue() {
+            var brightness = document.getElementById('userInput').value;
+            console.log("Brightness:", brightness);
+          }
+
           const toggleSwitch = document.querySelector('.switch input');
           toggleSwitch.addEventListener('change', function() {
             if (this.checked) {
               viewer.setFilterOptions({
                 filters: {
-                  processors: OpenSeadragon.Filters.GAMMA(0.5)
+                  processors: [
+                    OpenSeadragon.Filters.GAMMA(0.5),
+                    OpenSeadragon.Filters.BRIGHTNESS(brightness)
+                  ]
                 }
               });
             } else {
