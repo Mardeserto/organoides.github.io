@@ -301,9 +301,16 @@
             immediateRender: true
           });
 
-          var img = viewer.drawer;
+          var image = viewer.drawer;
           var canvas = viewer.drawer.canvas;
-          console.log("img:", img, "canvas:", canvas);
+
+          const img1 = new Image();
+          img1.crossOrigin = "Anonymous"; // Evita problemas de CORS
+          img1.src = image;
+          const img2 = new Image();
+          img2.crossOrigin = "Anonymous"; // Evita problemas de CORS
+          img2.src = canvas;
+          console.log("img:", img1, "canvas:", img2);
 
           document.querySelectorAll('input[name="gamma"]').forEach((radio) => {
             radio.addEventListener('input', function() {
