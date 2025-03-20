@@ -380,13 +380,15 @@
             immediateRender: true
           });
 
+          function getInputValue() {
+                var brightness = document.getElementById('userInput').value;
+                console.log("Brightness:", brightness);
+              }
+
           const toggleSwitch = document.querySelector('.switch input');
           toggleSwitch.addEventListener('change', function() {
             if (this.checked) {
-              function getInputValue() {
-                var brightness = document.getElementById('userInput').value;
-                console.log("Brightness:", brightness);
-              };
+              getInputValue();
               viewer.setFilterOptions({
                 filters: {
                   processors: [
