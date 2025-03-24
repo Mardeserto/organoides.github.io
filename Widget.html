@@ -381,7 +381,10 @@
             if (this.checked) {
               viewer.setFilterOptions({
                 filters: {
-                  processors: OpenSeadragon.Filters.GAMMA(0.4)
+                  processors: [
+                    OpenSeadragon.Filters.GAMMA(0.5),
+                    OpenSeadragon.Filters.BRIGHTNESS(-15)
+                  ]
                 }
               });
             } else {
