@@ -379,14 +379,10 @@
             immediateRender: true
           });
 
-          function getInputValue() {
-                parseFloat(document.getElementById('userInput').value);
-              }
-
           const toggleSwitch = document.querySelector('.switch input');
           toggleSwitch.addEventListener('change', function() {
             if (this.checked) {
-              brightness = getInputValue();
+             var brightness = parseFloat(document.getElementById('userInput').value);
               viewer.setFilterOptions({
                 filters: {
                   processors: [
