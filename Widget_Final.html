@@ -299,6 +299,14 @@
     <div id="slider-label">Focus Adjustment</div>
     <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
 
+    <div id="gamma-container">
+      <label class="switch">
+        <input type="checkbox">
+        <span class="slider round"></span>
+        <span class="switch-label">Gamma Tuning</span>
+      </label>
+    </div>
+
     <!-- Inclui as caixas de seleção-->
     <div class="checkbox-org-container">Classify the organoid above:
       <label class="checkbox-org-label">
@@ -311,17 +319,7 @@
         <input type="radio" name="selection-org" value="Not Loaded"> Image did not load
       </label>
     </div>
-    <div class="checkbox-photo-container">How would you rate the image quality?
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Good"> The quality of the image allows me to rate the organoid with no issues.
-      </label>
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Reasonable"> The quality of the image is not ideal for rating but I can still assess the organoid effectively.
-      </label>
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Bad"> The quality of the image is significantly impacting my ability to rate this organoid.
-      </label>
-    </div>
+    
     <div class="warning">
       <img src="/organoides.github.io/images/warning.png" style='vertical-align:middle;width:10%;' />
       Do not reload or refresh the page as you will have to restart
@@ -336,7 +334,7 @@
       const label = `Organoid_${photoNumber}`;
 
       // Get Organoid's "form" name and find original name in CSV file below
-      const csvFilePath = "20250210_Organoid_Names_IDOR.csv";
+      const csvFilePath = "20250401_Organoid_Names_Final.csv";
       fetch(csvFilePath)
         .then(response => {
           if (!response.ok) {
@@ -368,6 +366,26 @@
             immediateRender: true
           });
 
+          const toggleSwitch = document.querySelector('.switch input');
+          toggleSwitch.addEventListener('change', function() {
+            if (this.checked) {
+              viewer.setFilterOptions({
+                filters: {
+                  processors: [
+                    OpenSeadragon.Filters.GAMMA(0.5),
+                    OpenSeadragon.Filters.BRIGHTNESS(-15)
+                  ]
+                }
+              });
+            } else {
+              viewer.setFilterOptions({
+                filters: {
+                  processors: OpenSeadragon.Filters.GAMMA(1)
+                }
+              });
+            }
+          });
+
           // Função para salvar o estado de zoom
           function saveZoomState() {
             return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
@@ -396,20 +414,18 @@
           });
 
           // Listen for changes in the radio buttons to validate the required fields
-          document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
+          document.querySelectorAll('input[name="selection-org"]').forEach(input => {
             input.addEventListener('change', function () {
               const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-              const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
 
               // Update widget validity state as soon as fields are valid
-              if (orgClass && photoQual) {
+              if (orgClass) {
                 const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-                const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
                 const orgLabel = label;
                 const orgName = matchingInfo;
                 JFCustomWidget.sendSubmit({
                   valid: true,
-                  value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+                  value: `${orgLabel},${orgName},${orgClass}}`
                 });
               }
             });
@@ -418,9 +434,8 @@
           // Submission logic
           JFCustomWidget.subscribe("submit", function () {
             const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-            const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
 
-            if (orgClass && photoQual) {
+            if (orgClass) {
               const orgLabel = label;
               const orgName = matchingInfo;
               JFCustomWidget.sendData({
@@ -428,7 +443,7 @@
               })
               JFCustomWidget.sendSubmit({
                 valid: true,
-                value: `${orgLabel},${orgName},${orgClass},${photoQual}`
+                value: `${orgLabel},${orgName},${orgClass}`
               });
             } else {
               alert("Please select an option for both questions");

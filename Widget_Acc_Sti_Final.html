@@ -16,7 +16,7 @@
   <style>
     html {
       width: 715px;
-      height: 885px;
+      height: 485px;
     }
 
     body {
@@ -152,7 +152,7 @@
     #slider::-ms-tooltip {
       display: none;
     }
-
+    
     #gamma-container {
       position: relative;
       top: -84px;
@@ -240,92 +240,25 @@
       font-weight: bold;
       color: #333;
     }
-
-    .checkbox-org-container {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      align-self: stretch;
-      width: 100%;
-      margin-top: -105px;
-      margin-left: 10px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .checkbox-org-label {
-      margin-top: 8px;
-      font-size: 17px;
-      text-align: left;
-      font-weight: normal;
-    }
-
-    .checkbox-photo-container {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      align-self: stretch;
-      width: 100%;
-      margin-top: 20px;
-      margin-left: 10px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .checkbox-photo-label {
-      margin-top: 8px;
-      font-size: 17px;
-      text-align: left;
-      font-weight: normal;
-    }
-
-    .warning {
-      margin-top: 25px;
-      margin-left: 491px;
-      text-align: justify;
-      font-size: 14px;
-      color: red;
-    }
   </style>
 </head>
 
 <body>
   <div id="main">
-    <h3 id="label">Organoid Classification Section</h3>
+    <h3 id="label">Organoid Acquaintance Section</h3>
 
     <!-- Inclui e ajusta o slider de ajuste de foco -->
     <div id="focus-container"></div>
     <div id="slider-container"></div>
     <div id="slider-label">Focus Adjustment</div>
     <input class="draggable" type="range" id="slider" min="1" max="5" value="1" step="1">
-
-    <!-- Inclui as caixas de seleção-->
-    <div class="checkbox-org-container">Classify the organoid above:
-      <label class="checkbox-org-label">
-        <input type="radio" name="selection-org" value="Acceptable"> Acceptable
+    
+    <div id="gamma-container">
+      <label class="switch">
+        <input type="checkbox">
+        <span class="slider round"></span>
+        <span class="switch-label">Gamma Tuning</span>
       </label>
-      <label class="checkbox-org-label">
-        <input type="radio" name="selection-org" value="Not Acceptable"> Not acceptable
-      </label>
-      <label class="checkbox-org-label">
-        <input type="radio" name="selection-org" value="Not Loaded"> Image did not load
-      </label>
-    </div>
-    <div class="checkbox-photo-container">How would you rate the image quality?
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Good"> The quality of the image allows me to rate the organoid with no issues.
-      </label>
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Reasonable"> The quality of the image is not ideal for rating but I can still assess the organoid effectively.
-      </label>
-      <label class="checkbox-photo-label">
-        <input type="radio" name="selection-photo" value="Bad"> The quality of the image is significantly impacting my ability to rate this organoid.
-      </label>
-    </div>
-    <div class="warning">
-      <img src="/organoides.github.io/images/warning.png" style='vertical-align:middle;width:10%;' />
-      Do not reload or refresh the page as you will have to restart
-      <img src="/organoides.github.io/images/warning.png" style='vertical-align:middle;width:10%;' />
     </div>
   </div>
 
@@ -336,7 +269,7 @@
       const label = `Organoid_${photoNumber}`;
 
       // Get Organoid's "form" name and find original name in CSV file below
-      const csvFilePath = "20250210_Organoid_Names_IDOR.csv";
+      const csvFilePath = "20250401_Organoid_Names_Final.csv";
       fetch(csvFilePath)
         .then(response => {
           if (!response.ok) {
@@ -355,7 +288,7 @@
               matchingInfo = info.trim(); // Trim whitespace & newlines
             }
           });
-          
+
           // Inicializa o OpenSeadragon
           var viewer = OpenSeadragon({
             id: "focus-container",
@@ -366,6 +299,40 @@
             tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
             blendTime: 0.2, // Controle de transição suave (0.2 segundos)
             immediateRender: true
+          });
+
+          const toggleSwitch = document.querySelector('.switch input');
+          toggleSwitch.addEventListener('change', function() {
+            if (this.checked) {
+              viewer.setFilterOptions({
+                filters: {
+                  processors: [
+                    OpenSeadragon.Filters.GAMMA(0.5),
+                    OpenSeadragon.Filters.BRIGHTNESS(-15)
+                  ]
+                }
+              });
+            } else {
+              viewer.setFilterOptions({
+                filters: {
+                  processors: OpenSeadragon.Filters.GAMMA(1)
+                }
+              });
+            }
+          });
+
+          // Get image dimensions and adjust inital zoom to match unstiched photos' size calibration and position
+          viewer.addHandler('open', function () {
+            var tiledImage = viewer.world.getItemAt(0);
+            var tiledImageDim = tiledImage.source.dimensions
+            var rectwidth = 850;
+            var rectheight = 850;
+            var offsetX = -150;
+            var offsetY = 0;
+            var imageRect = new OpenSeadragon.Rect(tiledImageDim.x - rectwidth + offsetX, tiledImageDim.y - rectheight + offsetY, rectwidth, rectheight);
+            var viewportRect = tiledImage.imageToViewportRectangle(imageRect);
+            viewer.viewport.fitBounds(viewportRect, true);
+            console.log("Image Dimensions:", tiledImageDim);
           });
 
           // Função para salvar o estado de zoom
@@ -395,45 +362,18 @@
             });
           });
 
-          // Listen for changes in the radio buttons to validate the required fields
-          document.querySelectorAll('input[name="selection-org"], input[name="selection-photo"]').forEach(input => {
-            input.addEventListener('change', function () {
-              const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-              const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-
-              // Update widget validity state as soon as fields are valid
-              if (orgClass && photoQual) {
-                const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-                const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-                const orgLabel = label;
-                const orgName = matchingInfo;
-                JFCustomWidget.sendSubmit({
-                  valid: true,
-                  value: `${orgLabel},${orgName},${orgClass},${photoQual}`
-                });
-              }
-            });
-          });
-
-          // Submission logic
+          // Envio de dados para o Jotform
           JFCustomWidget.subscribe("submit", function () {
-            const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-            const photoQual = document.querySelector('input[name="selection-photo"]:checked')?.value || null;
-
-            if (orgClass && photoQual) {
-              const orgLabel = label;
-              const orgName = matchingInfo;
-              JFCustomWidget.sendData({
-                answered: true
-              })
-              JFCustomWidget.sendSubmit({
-                valid: true,
-                value: `${orgLabel},${orgName},${orgClass},${photoQual}`
-              });
-            } else {
-              alert("Please select an option for both questions");
-              JFCustomWidget.sendSubmit({ valid: false });
-            }
+            // Collect data and submit it
+            const orgLabel = label;
+            const orgName = matchingInfo;
+            JFCustomWidget.sendData({
+              answered: true
+            })
+            JFCustomWidget.sendSubmit({
+              valid: true,
+              value: `Acquaintance fase: ${orgLabel},${orgName}`
+            });
           });
         })
     });
