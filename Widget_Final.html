@@ -156,9 +156,9 @@
     #gamma-container {
       position: relative;
       top: -84px;
-      left: 385px;
+      left: 473px;
       height: 20px;
-      width: 250px;
+      width: 160px;
       background-color: #fffefe;
       border: 2px solid #333;
       padding: 2px;
@@ -170,7 +170,7 @@
     .switch {
       position: relative;
       top: 3px;
-      left: -150px;
+      left: 0px;
       display: inline-block;
       width: 40px;
       height: 15px;
@@ -232,14 +232,16 @@
     }
 
     .switch-label {
-     position: relative;
-     left: 45px;
-     top: -20px;
-     font-family: Helvetica, sans-serif;
+      position: relative;
+      left: 0px; /* Adjust if necessary */
+      top: 1px;
+      font-family: Helvetica, sans-serif;
       font-size: 15px;
       font-weight: bold;
       color: #333;
-    }
+      white-space: nowrap; /* Prevent text from breaking into two lines */
+      display: inline-block; /* Ensure it stays on the same line */
+    } 
 
     .checkbox-org-container {
       display: flex;
@@ -303,8 +305,8 @@
       <label class="switch">
         <input type="checkbox">
         <span class="slider round"></span>
-        <span class="switch-label">Gamma Tuning</span>
       </label>
+      <span class="switch-label">Gamma Tuning</span>
     </div>
 
     <!-- Inclui as caixas de seleção-->
