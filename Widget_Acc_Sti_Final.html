@@ -61,7 +61,7 @@
       height: 13px;
       transform: rotate(90deg);
       right: -329px;
-      top: -260.5px;
+      top: -263.5px;
 
     }
 
@@ -113,6 +113,9 @@
     }
 
     #slider::-moz-range-thumb {
+      -moz-appearance: none;
+      background: transparent;
+      border: transparent;
       height: 19px;
       width: 19px;
       background-image: url(/organoides.github.io/images/button2.png);
@@ -156,9 +159,9 @@
     #gamma-container {
       position: relative;
       top: -84px;
-      left: 485px;
+      left: 473px;
       height: 20px;
-      width: 150px;
+      width: 160px;
       background-color: #fffefe;
       border: 2px solid #333;
       padding: 2px;
@@ -170,7 +173,7 @@
     .switch {
       position: relative;
       top: 3px;
-      left: -50px;
+      left: 0px;
       display: inline-block;
       width: 40px;
       height: 15px;
@@ -233,8 +236,8 @@
 
     .switch-label {
      position: relative;
-     left: 45px;
-     top: -20px;
+      left: 0px; /* Adjust if necessary */
+      top: 1px;
      font-family: Helvetica, sans-serif;
       font-size: 15px;
       font-weight: bold;
@@ -257,8 +260,8 @@
       <label class="switch">
         <input type="checkbox">
         <span class="slider round"></span>
-        <span class="switch-label">Gamma Tuning</span>
       </label>
+        <span class="switch-label">Gamma Tuning</span>
     </div>
   </div>
 
