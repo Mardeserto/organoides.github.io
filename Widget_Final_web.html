@@ -296,7 +296,12 @@
 
 <body>
   <div id="main">
-    <h3 id="label">Organoid Classification Section</h3>
+    <h3 id="label">Organoid Classification</h3>
+
+    <div style="margin-bottom: 20px; padding-top: 10px;">
+    <input type="text" id="organoid-input" placeholder="Enter Organoid Number (1 to 421)" style="padding: 5px; width: 150px;">
+    <button id="load-btn" style="padding: 5px 15px; cursor: pointer;">Load Organoid</button>
+    </div>
 
     <!-- Inclui e ajusta o slider de ajuste de foco -->
     <div id="focus-container"></div>
@@ -333,132 +338,111 @@
   </div>
 
   <script>
-    window.onload = function() {
-      // Configuração dos valores a partir das definições do widget no Jotform
-      const params = new URLSearchParams(window.location.search);
-      const photoNumber = params.get('organoid') || 0;
-      const label = `Organoid_${photoNumber}` ;
+    let viewer; // Define viewer globally to manage instances
 
-      // Get Organoid's "form" name and find original name in CSV file below
+    window.onload = function() {
+      const loadBtn = document.getElementById('load-btn');
+      const inputField = document.getElementById('organoid-input');
+
+      // Trigger on button click
+      loadBtn.addEventListener('click', () => {
+        loadOrganoid(inputField.value);
+      });
+
+      // Trigger on 'Enter' key press
+      inputField.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') loadOrganoid(inputField.value);
+      });
+    };
+
+    function loadOrganoid(photoNumber) {
+      if (!photoNumber) {
+        alert("Please enter a number");
+        return;
+      }
+
+      const label = `Organoid_${photoNumber}`;
       const csvFilePath = "20250401_Organoid_Names_Final.csv";
+
       fetch(csvFilePath)
         .then(response => {
-          if (!response.ok) {
-            throw new Error(`Failed to fetch CSV file: ${response.statusText}`);
-          }
+          if (!response.ok) throw new Error(`Failed to fetch CSV: ${response.statusText}`);
           return response.text();
         })
         .then(csvText => {
-          // Parse CSV text into rows and cells
           const rows = csvText.split("\n").map(row => row.split(","));
-
-          // Find the information corresponding to the "label" variable
           let matchingInfo = "Not found";
+          
           rows.forEach(([variable, info]) => {
-            if (variable.trim() === label.trim()) {
-              matchingInfo = info.trim(); // Trim whitespace & newlines
+            if (variable && variable.trim() === label.trim()) {
+              matchingInfo = info.trim();
             }
           });
-          
-          // Inicializa o OpenSeadragon
-          var viewer = OpenSeadragon({
+
+          // If a viewer already exists, destroy it before creating a new one
+          if (viewer) {
+            viewer.destroy();
+          }
+
+          // Initialize OpenSeadragon
+          viewer = OpenSeadragon({
             id: "focus-container",
             prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
             showFullPageControl: false,
             showNavigator: true,
             maxZoomPixelRatio: 4,
             tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
-            blendTime: 0.2, // Controle de transição suave (0.2 segundos)
+            blendTime: 0.2,
             immediateRender: true
           });
 
-          const toggleSwitch = document.querySelector('.switch input');
-          toggleSwitch.addEventListener('change', function() {
-            if (this.checked) {
-              viewer.setFilterOptions({
-                filters: {
-                  processors: [
-                    OpenSeadragon.Filters.GAMMA(0.5),
-                    OpenSeadragon.Filters.BRIGHTNESS(-15)
-                  ]
-                }
-              });
-            } else {
-              viewer.setFilterOptions({
-                filters: {
-                  processors: OpenSeadragon.Filters.GAMMA(1)
-                }
-              });
-            }
-          });
+          // RE-ATTACH SLIDER LOGIC (Needs to point to new viewer instance)
+          const slider = document.getElementById("slider");
+          slider.value = 1; // Reset slider position
+          
+          // Remove old listeners to prevent stacking
+          const newSlider = slider.cloneNode(true);
+          slider.parentNode.replaceChild(newSlider, slider);
 
-          // Função para salvar o estado de zoom
-          function saveZoomState() {
-            return { zoom: viewer.viewport.getZoom(), center: viewer.viewport.getCenter() };
-          }
-
-          // Função para restaurar o estado de zoom
-          function restoreZoomState(state) {
-            viewer.viewport.zoomTo(state.zoom, state.center);
-          }
-
-          // Monitora o slider para mudanças de foco
-          document.getElementById("slider").addEventListener('input', function () {
+          newSlider.addEventListener('input', function() {
             const focusLevel = this.value;
-            const zoomState = saveZoomState();
+            const zoom = viewer.viewport.getZoom();
+            const center = viewer.viewport.getCenter();
+
             viewer.addTiledImage({
               tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
-              success: function (event) {
-                const tiledImage = event.item;
-                restoreZoomState(zoomState);
+              success: function(event) {
+                viewer.viewport.zoomTo(zoom, center);
                 if (viewer.world.getItemCount() > 1) {
-                  const previousImage = viewer.world.getItemAt(0);
-                  viewer.world.removeItem(previousImage);
+                  viewer.world.removeItem(viewer.world.getItemAt(0));
                 }
               }
             });
           });
 
-          // Listen for changes in the radio buttons to validate the required fields
-          document.querySelectorAll('input[name="selection-org"]').forEach(input => {
-            input.addEventListener('change', function () {
-              const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-
-              // Update widget validity state as soon as fields are valid
-              if (orgClass) {
-                const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-                const orgLabel = label;
-                const orgName = matchingInfo;
-                JFCustomWidget.sendSubmit({
-                  valid: true,
-                  value: `${orgLabel},${orgName},${orgClass}`
-                });
-              }
-            });
-          });
-
-          // Submission logic
-          JFCustomWidget.subscribe("submit", function () {
-            const orgClass = document.querySelector('input[name="selection-org"]:checked')?.value || null;
-
-            if (orgClass) {
-              const orgLabel = label;
-              const orgName = matchingInfo;
-              JFCustomWidget.sendData({
-                answered: true
-              })
-              JFCustomWidget.sendSubmit({
-                valid: true,
-                value: `${orgLabel},${orgName},${orgClass}`
-              });
-            } else {
-              alert("Please select an option");
-              JFCustomWidget.sendSubmit({ valid: false });
-            }
-          });
+          // Logic for Radio Buttons and Jotform (re-bind to current label/matchingInfo)
+          setupJotformLogic(label, matchingInfo);
         })
-    };
+        .catch(err => {
+          console.error(err);
+          alert("Error loading data. Check console for details.");
+        });
+    }
 
+    function setupJotformLogic(label, matchingInfo) {
+      document.querySelectorAll('input[name="selection-org"]').forEach(input => {
+        // Clear previous selections for the new image
+        input.checked = false;
+        
+        input.onclick = function() {
+          const orgClass = this.value;
+          JFCustomWidget.sendSubmit({
+            valid: true,
+            value: `${label},${matchingInfo},${orgClass}`
+          });
+        };
+      });
+    }
   </script>
 </body>
 
