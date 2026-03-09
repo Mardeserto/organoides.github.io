@@ -300,7 +300,7 @@
 
     <div style="margin-bottom: 20px; padding-top: 10px;">
     Enter organoid number (between 1 and 421):
-    <input type="text" id="organoid-input" placeholder="Enter Organoid Number (1 to 421)" style="padding: 5px; width: 150px;">
+    <input type="text" id="organoid-input" style="padding: 5px; width: 150px;">
     <button id="load-btn" style="padding: 5px 15px; cursor: pointer;">Load Organoid</button>
     </div>
 
@@ -387,6 +387,26 @@
         const focusLevel = this.value;
         const zoom = viewer.viewport.getZoom();
         const center = viewer.viewport.getCenter();
+
+      const toggleSwitch = document.querySelector('.switch input');
+        toggleSwitch.addEventListener('change', function() {
+          if (this.checked) {
+            viewer.setFilterOptions({
+              filters: {
+                processors: [
+                  OpenSeadragon.Filters.GAMMA(0.5),
+                  OpenSeadragon.Filters.BRIGHTNESS(-15)
+                ]
+              }
+            });
+          } else {
+            viewer.setFilterOptions({
+              filters: {
+                processors: OpenSeadragon.Filters.GAMMA(1)
+              }
+            });
+          }
+        });
 
         viewer.addTiledImage({
           tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
