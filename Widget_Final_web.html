@@ -299,6 +299,7 @@
     <h3 id="label">Organoid Classification</h3>
 
     <div style="margin-bottom: 20px; padding-top: 10px;">
+    Enter organoid number (between 1 and 421):
     <input type="text" id="organoid-input" placeholder="Enter Organoid Number (1 to 421)" style="padding: 5px; width: 150px;">
     <button id="load-btn" style="padding: 5px 15px; cursor: pointer;">Load Organoid</button>
     </div>
@@ -328,13 +329,7 @@
       <label class="checkbox-org-label">
         <input type="radio" name="selection-org" value="Not Loaded"> Image did not load
       </label>
-    </div>
-    
-    <div class="warning">
-      <img src="/organoides.github.io/images/warning.png" style='vertical-align:middle;width:10%;' />
-      Do not reload or refresh the page as you will have to restart
-      <img src="/organoides.github.io/images/warning.png" style='vertical-align:middle;width:10%;' />
-    </div>
+    </div>   
   </div>
 
   <script>
@@ -357,90 +352,51 @@
 
     function loadOrganoid(photoNumber) {
       if (!photoNumber) {
-        alert("Please enter a number");
+        alert("Please enter a number between 1 and 421");
         return;
       }
 
       const label = `Organoid_${photoNumber}`;
-      const csvFilePath = "20250401_Organoid_Names_Final.csv";
 
-      fetch(csvFilePath)
-        .then(response => {
-          if (!response.ok) throw new Error(`Failed to fetch CSV: ${response.statusText}`);
-          return response.text();
-        })
-        .then(csvText => {
-          const rows = csvText.split("\n").map(row => row.split(","));
-          let matchingInfo = "Not found";
-          
-          rows.forEach(([variable, info]) => {
-            if (variable && variable.trim() === label.trim()) {
-              matchingInfo = info.trim();
+      // If a viewer already exists, destroy it before creating a new one
+      if (viewer) {
+        viewer.destroy();
+      }
+
+      // Initialize OpenSeadragon
+      viewer = OpenSeadragon({
+        id: "focus-container",
+        prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
+        showFullPageControl: false,
+        showNavigator: true,
+        maxZoomPixelRatio: 4,
+        tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
+        blendTime: 0.2,
+        immediateRender: true
+      });
+
+      // RE-ATTACH SLIDER LOGIC (Needs to point to new viewer instance)
+      const slider = document.getElementById("slider");
+      slider.value = 1; // Reset slider position
+      
+      // Remove old listeners to prevent stacking
+      const newSlider = slider.cloneNode(true);
+      slider.parentNode.replaceChild(newSlider, slider);
+
+      newSlider.addEventListener('input', function() {
+        const focusLevel = this.value;
+        const zoom = viewer.viewport.getZoom();
+        const center = viewer.viewport.getCenter();
+
+        viewer.addTiledImage({
+          tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
+          success: function(event) {
+            viewer.viewport.zoomTo(zoom, center);
+            if (viewer.world.getItemCount() > 1) {
+              viewer.world.removeItem(viewer.world.getItemAt(0));
             }
-          });
-
-          // If a viewer already exists, destroy it before creating a new one
-          if (viewer) {
-            viewer.destroy();
           }
-
-          // Initialize OpenSeadragon
-          viewer = OpenSeadragon({
-            id: "focus-container",
-            prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
-            showFullPageControl: false,
-            showNavigator: true,
-            maxZoomPixelRatio: 4,
-            tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
-            blendTime: 0.2,
-            immediateRender: true
-          });
-
-          // RE-ATTACH SLIDER LOGIC (Needs to point to new viewer instance)
-          const slider = document.getElementById("slider");
-          slider.value = 1; // Reset slider position
-          
-          // Remove old listeners to prevent stacking
-          const newSlider = slider.cloneNode(true);
-          slider.parentNode.replaceChild(newSlider, slider);
-
-          newSlider.addEventListener('input', function() {
-            const focusLevel = this.value;
-            const zoom = viewer.viewport.getZoom();
-            const center = viewer.viewport.getCenter();
-
-            viewer.addTiledImage({
-              tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
-              success: function(event) {
-                viewer.viewport.zoomTo(zoom, center);
-                if (viewer.world.getItemCount() > 1) {
-                  viewer.world.removeItem(viewer.world.getItemAt(0));
-                }
-              }
-            });
-          });
-
-          // Logic for Radio Buttons and Jotform (re-bind to current label/matchingInfo)
-          setupJotformLogic(label, matchingInfo);
-        })
-        .catch(err => {
-          console.error(err);
-          alert("Error loading data. Check console for details.");
         });
-    }
-
-    function setupJotformLogic(label, matchingInfo) {
-      document.querySelectorAll('input[name="selection-org"]').forEach(input => {
-        // Clear previous selections for the new image
-        input.checked = false;
-        
-        input.onclick = function() {
-          const orgClass = this.value;
-          JFCustomWidget.sendSubmit({
-            valid: true,
-            value: `${label},${matchingInfo},${orgClass}`
-          });
-        };
       });
     }
   </script>
