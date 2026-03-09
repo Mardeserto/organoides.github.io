@@ -375,19 +375,6 @@
         immediateRender: true
       });
 
-      // RE-ATTACH SLIDER LOGIC (Needs to point to new viewer instance)
-      const slider = document.getElementById("slider");
-      slider.value = 1; // Reset slider position
-      
-      // Remove old listeners to prevent stacking
-      const newSlider = slider.cloneNode(true);
-      slider.parentNode.replaceChild(newSlider, slider);
-
-      newSlider.addEventListener('input', function() {
-        const focusLevel = this.value;
-        const zoom = viewer.viewport.getZoom();
-        const center = viewer.viewport.getCenter();
-
       const toggleSwitch = document.querySelector('.switch input');
         toggleSwitch.addEventListener('change', function() {
           if (this.checked) {
@@ -407,6 +394,19 @@
             });
           }
         });
+        
+      // RE-ATTACH SLIDER LOGIC (Needs to point to new viewer instance)
+      const slider = document.getElementById("slider");
+      slider.value = 1; // Reset slider position
+      
+      // Remove old listeners to prevent stacking
+      const newSlider = slider.cloneNode(true);
+      slider.parentNode.replaceChild(newSlider, slider);
+
+      newSlider.addEventListener('input', function() {
+        const focusLevel = this.value;
+        const zoom = viewer.viewport.getZoom();
+        const center = viewer.viewport.getCenter();
 
         viewer.addTiledImage({
           tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
