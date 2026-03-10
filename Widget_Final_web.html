@@ -339,67 +339,79 @@
       const loadBtn = document.getElementById('load-btn');
       const inputField = document.getElementById('organoid-input');
 
-      // Trigger on button click
       loadBtn.addEventListener('click', () => {
         loadOrganoid(inputField.value);
       });
 
-      // Trigger on 'Enter' key press
       inputField.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') loadOrganoid(inputField.value);
       });
+
+      // Listen for toggle changes and apply to current viewer
+      const toggleSwitch = document.querySelector('.switch input');
+      toggleSwitch.addEventListener('change', function() {
+        applyFilters();
+      });
     };
 
+    // Helper function to apply filters based on current switch state
+    function applyFilters() {
+      if (!viewer) return;
+
+      const isTuned = document.querySelector('.switch input').checked;
+      
+      if (isTuned) {
+        viewer.setFilterOptions({
+          filters: {
+            processors: [
+              OpenSeadragon.Filters.GAMMA(0.5),
+              OpenSeadragon.Filters.BRIGHTNESS(-15)
+            ]
+          }
+        });
+      } else {
+        viewer.setFilterOptions({
+          filters: {
+            processors: OpenSeadragon.Filters.GAMMA(1)
+          }
+        });
+      }
+    }
+
     function loadOrganoid(photoNumber) {
-      if (!photoNumber) {
-        alert("Please enter a number between 1 and 421");
+      const num = parseInt(photoNumber, 10);
+
+      // 1) ADJUSTED VALIDATION
+      if (isNaN(num) || num < 1 || num > 421) {
+        alert("Please enter a valid number between 1 and 421");
         return;
       }
 
-      const label = `Organoid_${photoNumber}`;
-
-      // If a viewer already exists, destroy it before creating a new one
       if (viewer) {
         viewer.destroy();
       }
 
-      // Initialize OpenSeadragon
       viewer = OpenSeadragon({
         id: "focus-container",
         prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/",
         showFullPageControl: false,
         showNavigator: true,
         maxZoomPixelRatio: 4,
-        tileSources: `images/Organoid_${photoNumber}/focus_1.xml`,
+        tileSources: `images/Organoid_${num}/focus_1.xml`,
         blendTime: 0.2,
         immediateRender: true
       });
 
-      const toggleSwitch = document.querySelector('.switch input');
-        toggleSwitch.addEventListener('change', function() {
-          if (this.checked) {
-            viewer.setFilterOptions({
-              filters: {
-                processors: [
-                  OpenSeadragon.Filters.GAMMA(0.5),
-                  OpenSeadragon.Filters.BRIGHTNESS(-15)
-                ]
-              }
-            });
-          } else {
-            viewer.setFilterOptions({
-              filters: {
-                processors: OpenSeadragon.Filters.GAMMA(1)
-              }
-            });
-          }
-        });
-        
-      // RE-ATTACH SLIDER LOGIC (Needs to point to new viewer instance)
+      // 2) APPLY FILTERS IMMEDIATELY ON LOAD
+      // This ensures if the switch is already "ON", the new image gets filtered
+      viewer.addHandler('open', function() {
+        applyFilters();
+      });
+
+      // RE-ATTACH SLIDER LOGIC
       const slider = document.getElementById("slider");
-      slider.value = 1; // Reset slider position
+      slider.value = 1; 
       
-      // Remove old listeners to prevent stacking
       const newSlider = slider.cloneNode(true);
       slider.parentNode.replaceChild(newSlider, slider);
 
@@ -409,12 +421,14 @@
         const center = viewer.viewport.getCenter();
 
         viewer.addTiledImage({
-          tileSource: `images/Organoid_${photoNumber}/focus_${focusLevel}.xml`,
+          tileSource: `images/Organoid_${num}/focus_${focusLevel}.xml`,
           success: function(event) {
             viewer.viewport.zoomTo(zoom, center);
             if (viewer.world.getItemCount() > 1) {
               viewer.world.removeItem(viewer.world.getItemAt(0));
             }
+            // Re-apply filters to the new tiled image
+            applyFilters();
           }
         });
       });
